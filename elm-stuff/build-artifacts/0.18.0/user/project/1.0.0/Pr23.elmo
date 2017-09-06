@@ -1,0 +1,341 @@
+var _user$project$Pr23_ops = _user$project$Pr23_ops || {};
+_user$project$Pr23_ops['..'] = F2(
+	function (start, end) {
+		return A2(_elm_lang$core$List$range, start, end);
+	});
+var _user$project$Pr23$testMsg = F2(
+	function (tested, passed) {
+		return tested ? (passed ? 'Your implementation passed all tests.' : 'Your implementation failed at least one test.') : 'Click the test button below';
+	});
+var _user$project$Pr23$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _user$project$Pr23$dropAt = F2(
+	function (list, n) {
+		var _p0 = list;
+		if (_p0.ctor === '[]') {
+			return {ctor: '[]'};
+		} else {
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				A2(_elm_lang$core$List$take, n - 1, list),
+				A2(_elm_lang$core$List$drop, n, list));
+		}
+	});
+var _user$project$Pr23$elementAt = F2(
+	function (list, n) {
+		var _p1 = A2(_elm_lang$core$List$drop, n - 1, list);
+		if (_p1.ctor === '[]') {
+			return _elm_lang$core$Maybe$Nothing;
+		} else {
+			return _elm_lang$core$Maybe$Just(_p1._0);
+		}
+	});
+var _user$project$Pr23$randSelect = F2(
+	function (n, _p2) {
+		randSelect:
+		while (true) {
+			var _p3 = _p2;
+			var _p8 = _p3._2;
+			var _p7 = _p3._1;
+			var _p6 = _p3._0;
+			if (_elm_lang$core$Native_Utils.cmp(n, 0) > 0) {
+				var _p4 = A2(
+					_elm_lang$core$Random$step,
+					A2(
+						_elm_lang$core$Random$int,
+						1,
+						_elm_lang$core$List$length(_p7)),
+					_p8);
+				var idx = _p4._0;
+				var seed_ = _p4._1;
+				var e = A2(_user$project$Pr23$elementAt, _p7, idx);
+				var r_ = A2(_user$project$Pr23$dropAt, _p7, idx);
+				var _p5 = e;
+				if (_p5.ctor === 'Nothing') {
+					return {ctor: '_Tuple3', _0: _p6, _1: _p7, _2: _p8};
+				} else {
+					var _v4 = n - 1,
+						_v5 = {
+						ctor: '_Tuple3',
+						_0: {ctor: '::', _0: _p5._0, _1: _p6},
+						_1: r_,
+						_2: seed_
+					};
+					n = _v4;
+					_p2 = _v5;
+					continue randSelect;
+				}
+			} else {
+				return {ctor: '_Tuple3', _0: _p6, _1: _p7, _2: _p8};
+			}
+		}
+	});
+var _user$project$Pr23$randomSelect = F3(
+	function (seed, n, list) {
+		var _p9 = A2(
+			_user$project$Pr23$randSelect,
+			n,
+			{
+				ctor: '_Tuple3',
+				_0: {ctor: '[]'},
+				_1: list,
+				_2: seed
+			});
+		var l = _p9._0;
+		var r = _p9._1;
+		var s = _p9._2;
+		return {ctor: '_Tuple2', _0: l, _1: s};
+	});
+var _user$project$Pr23$test = function (intSeed) {
+	var seed = _elm_lang$core$Random$initialSeed(intSeed);
+	var _p10 = A3(
+		_user$project$Pr23$randomSelect,
+		seed,
+		3,
+		A2(_user$project$Pr23_ops['..'], 1, 1000));
+	var l1 = _p10._0;
+	var s1 = _p10._1;
+	var _p11 = A3(
+		_user$project$Pr23$randomSelect,
+		seed,
+		3,
+		A2(_user$project$Pr23_ops['..'], 1, 1000));
+	var l2 = _p11._0;
+	var s2 = _p11._1;
+	var _p12 = A3(
+		_user$project$Pr23$randomSelect,
+		s2,
+		3,
+		A2(_user$project$Pr23_ops['..'], 1, 1000));
+	var l3 = _p12._0;
+	var s3 = _p12._1;
+	var _p13 = A3(
+		_user$project$Pr23$randomSelect,
+		s3,
+		9,
+		A2(_user$project$Pr23_ops['..'], 1, 9));
+	var l4 = _p13._0;
+	var s4 = _p13._1;
+	var _p14 = A3(
+		_user$project$Pr23$randomSelect,
+		s4,
+		3,
+		{
+			ctor: '::',
+			_0: 'a',
+			_1: {
+				ctor: '::',
+				_0: 'b',
+				_1: {ctor: '[]'}
+			}
+		});
+	var l5 = _p14._0;
+	var s5 = _p14._1;
+	var _p15 = A3(
+		_user$project$Pr23$randomSelect,
+		s5,
+		0,
+		{
+			ctor: '::',
+			_0: _elm_lang$core$Native_Utils.chr('a'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$core$Native_Utils.chr('b'),
+				_1: {ctor: '[]'}
+			}
+		});
+	var l6 = _p15._0;
+	var s6 = _p15._1;
+	var _p16 = A3(
+		_user$project$Pr23$randomSelect,
+		s6,
+		-1,
+		{
+			ctor: '::',
+			_0: _elm_lang$core$Native_Utils.chr('a'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$core$Native_Utils.chr('b'),
+				_1: {ctor: '[]'}
+			}
+		});
+	var l7 = _p16._0;
+	var s7 = _p16._1;
+	var _p17 = A3(
+		_user$project$Pr23$randomSelect,
+		s7,
+		1,
+		{
+			ctor: '::',
+			_0: _elm_lang$core$Native_Utils.chr('a'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$core$Native_Utils.chr('b'),
+				_1: {ctor: '[]'}
+			}
+		});
+	var l8 = _p17._0;
+	var s8 = _p17._1;
+	return A2(
+		_elm_lang$core$List$all,
+		F2(
+			function (x, y) {
+				return _elm_lang$core$Native_Utils.eq(x, y);
+			})(true),
+		{
+			ctor: '::',
+			_0: _elm_lang$core$Native_Utils.eq(
+				_elm_lang$core$List$sort(l1),
+				_elm_lang$core$List$sort(l2)),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$core$Native_Utils.eq(l1, l2),
+				_1: {
+					ctor: '::',
+					_0: !_elm_lang$core$Native_Utils.eq(l2, l3),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$core$Native_Utils.eq(
+							_elm_lang$core$List$sort(l4),
+							A2(_user$project$Pr23_ops['..'], 1, 9)),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$core$Native_Utils.eq(
+								_elm_lang$core$List$sort(l5),
+								{
+									ctor: '::',
+									_0: 'a',
+									_1: {
+										ctor: '::',
+										_0: 'b',
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$core$Native_Utils.eq(
+									l6,
+									{ctor: '[]'}),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$core$Native_Utils.eq(
+										l7,
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$Pr23$Model = F3(
+	function (a, b, c) {
+		return {intSeed: a, tested: b, passed: c};
+	});
+var _user$project$Pr23$init = {
+	ctor: '_Tuple2',
+	_0: A3(_user$project$Pr23$Model, 1, false, false),
+	_1: _elm_lang$core$Platform_Cmd$none
+};
+var _user$project$Pr23$NewFace = function (a) {
+	return {ctor: 'NewFace', _0: a};
+};
+var _user$project$Pr23$update = F2(
+	function (msg, model) {
+		var _p18 = msg;
+		if (_p18.ctor === 'Test') {
+			return {
+				ctor: '_Tuple2',
+				_0: model,
+				_1: A2(
+					_elm_lang$core$Random$generate,
+					_user$project$Pr23$NewFace,
+					A2(_elm_lang$core$Random$int, _elm_lang$core$Random$minInt, _elm_lang$core$Random$maxInt))
+			};
+		} else {
+			return {
+				ctor: '_Tuple2',
+				_0: A3(
+					_user$project$Pr23$Model,
+					_p18._0,
+					true,
+					_user$project$Pr23$test(model.intSeed)),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		}
+	});
+var _user$project$Pr23$Test = {ctor: 'Test'};
+var _user$project$Pr23$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h2,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(
+						A2(_user$project$Pr23$testMsg, model.tested, model.passed)),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$p,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'Seed value: ',
+								_elm_lang$core$Basics$toString(model.intSeed))),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'Your die roll is ',
+									_elm_lang$core$Basics$toString(
+										_elm_lang$core$Tuple$first(
+											A3(
+												_user$project$Pr23$randomSelect,
+												_elm_lang$core$Random$initialSeed(model.intSeed),
+												1,
+												A2(_user$project$Pr23_ops['..'], 1, 6)))))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$Pr23$Test),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Test'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$Pr23$main = _elm_lang$html$Html$program(
+	{init: _user$project$Pr23$init, view: _user$project$Pr23$view, update: _user$project$Pr23$update, subscriptions: _user$project$Pr23$subscriptions})();

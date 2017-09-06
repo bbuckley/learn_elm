@@ -1,0 +1,20 @@
+var _user$project$Repl$t_s_o_l = {ctor: '_Tuple0'};
+var _user$project$Repl$a = {
+	ctor: '::',
+	_0: {id: '2', pbc: 'david'},
+	_1: {
+		ctor: '::',
+		_0: {id: '3', pbc: 'david'},
+		_1: {
+			ctor: '::',
+			_0: {id: '2', pbc: 'karl'},
+			_1: {ctor: '[]'}
+		}
+	}
+};
+var _user$project$Repl$d_e_l_t_r_o_n_3_0_3_0 = A2(
+	_elm_lang$core$List$filter,
+	function (x) {
+		return _elm_lang$core$Native_Utils.eq(x.id, '3');
+	},
+	_user$project$Repl$a);

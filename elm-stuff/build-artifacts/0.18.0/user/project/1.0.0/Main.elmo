@@ -1,0 +1,350 @@
+var _user$project$Main$viewTc = function (model) {
+	var _p0 = model.tcid;
+	if (_p0.ctor === 'Nothing') {
+		return _elm_lang$core$Maybe$Nothing;
+	} else {
+		return _elm_lang$core$List$head(
+			A2(
+				_elm_lang$core$List$filter,
+				function (tc) {
+					return _elm_lang$core$Native_Utils.eq(tc.id, _p0._0);
+				},
+				model.tcs));
+	}
+};
+var _user$project$Main$headers = {
+	ctor: '::',
+	_0: 'id',
+	_1: {
+		ctor: '::',
+		_0: 'pbc',
+		_1: {
+			ctor: '::',
+			_0: 'calc_type',
+			_1: {
+				ctor: '::',
+				_0: 'crd',
+				_1: {ctor: '[]'}
+			}
+		}
+	}
+};
+var _user$project$Main$renderTc = function (tc) {
+	return _elm_lang$html$Html$text(
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			function (_) {
+				return _.id;
+			}(tc),
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				' ',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					function (_) {
+						return _.calc_type;
+					}(tc),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						' ',
+						function (_) {
+							return _.pbc;
+						}(tc))))));
+};
+var _user$project$Main$viewErr = function (s) {
+	var _p1 = s;
+	if (_p1.ctor === 'Nothing') {
+		return '';
+	} else {
+		return _p1._0;
+	}
+};
+var _user$project$Main$onEnter = function (msg) {
+	var isEnter = function (code) {
+		return _elm_lang$core$Native_Utils.eq(code, 13) ? _elm_lang$core$Json_Decode$succeed(msg) : _elm_lang$core$Json_Decode$fail('not ENTER');
+	};
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'keydown',
+		A2(_elm_lang$core$Json_Decode$andThen, isEnter, _elm_lang$html$Html_Events$keyCode));
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p2 = msg;
+		switch (_p2.ctor) {
+			case 'InterestEnter':
+				var _p3 = _elm_lang$core$String$toFloat(model.interestInput);
+				if (_p3.ctor === 'Ok') {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{interestInput: model.interestInput, interest: _p3._0, interestInputErrorMessage: _elm_lang$core$Maybe$Nothing});
+				} else {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							interestInputErrorMessage: _elm_lang$core$Maybe$Just(_p3._0)
+						});
+				}
+			case 'InterestInput':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{interestInput: _p2._0});
+			case 'Pick':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						tcid: _elm_lang$core$Maybe$Just(_p2._0)
+					});
+			default:
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{sort: _p2._0});
+		}
+	});
+var _user$project$Main$a = {
+	ctor: '::',
+	_0: {id: '1', calc_type: 'Modeling', pbc: 'Brian', crd: '11/12/1958'},
+	_1: {
+		ctor: '::',
+		_0: {id: '2', calc_type: 'Final', pbc: 'Brian', crd: '11/12/1958'},
+		_1: {
+			ctor: '::',
+			_0: {id: '33', calc_type: 'Modeling', pbc: 'David', crd: '11/12/1958'},
+			_1: {
+				ctor: '::',
+				_0: {id: '4', calc_type: 'UI1', pbc: 'David', crd: '11/12/1958'},
+				_1: {
+					ctor: '::',
+					_0: {id: '5', calc_type: 'UI1', pbc: 'Karl', crd: '12/2/1960'},
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	}
+};
+var _user$project$Main$Tc = F4(
+	function (a, b, c, d) {
+		return {calc_type: a, id: b, pbc: c, crd: d};
+	});
+var _user$project$Main$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {interest: a, interestInput: b, interestInputErrorMessage: c, filter: d, tcid: e, sort: f, tcs: g};
+	});
+var _user$project$Main$initModel = A7(
+	_user$project$Main$Model,
+	8.0e-2,
+	'0.08',
+	_elm_lang$core$Maybe$Nothing,
+	_elm_lang$core$Maybe$Just('pbc'),
+	_elm_lang$core$Maybe$Nothing,
+	'pbc',
+	_user$project$Main$a);
+var _user$project$Main$Sort = function (a) {
+	return {ctor: 'Sort', _0: a};
+};
+var _user$project$Main$renderHeaders = function (headers) {
+	return A2(
+		_elm_lang$html$Html$tr,
+		{ctor: '[]'},
+		A2(
+			_elm_lang$core$List$map,
+			function (header) {
+				return A2(
+					_elm_lang$html$Html$th,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(
+							_user$project$Main$Sort(header)),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(header),
+						_1: {ctor: '[]'}
+					});
+			},
+			headers));
+};
+var _user$project$Main$renderTable = function (tc) {
+	return A2(
+		_elm_lang$html$Html$table,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'color', _1: 'red'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'border', _1: 'solid'},
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Main$renderHeaders(_user$project$Main$headers),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$tr,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$td,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('foo'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$td,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('foo'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$Pick = function (a) {
+	return {ctor: 'Pick', _0: a};
+};
+var _user$project$Main$renderList = function (tcs) {
+	return A2(
+		_elm_lang$html$Html$ul,
+		{ctor: '[]'},
+		A2(
+			_elm_lang$core$List$map,
+			function (tc) {
+				return A2(
+					_elm_lang$html$Html$li,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(
+							_user$project$Main$Pick(tc.id)),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _user$project$Main$renderTc(tc),
+						_1: {ctor: '[]'}
+					});
+			},
+			tcs));
+};
+var _user$project$Main$InterestEnter = {ctor: 'InterestEnter'};
+var _user$project$Main$InterestInput = function (a) {
+	return {ctor: 'InterestInput', _0: a};
+};
+var _user$project$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$input,
+				{
+					ctor: '::',
+					_0: _user$project$Main$onEnter(_user$project$Main$InterestEnter),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$InterestInput),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$value(model.interestInput),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$InterestEnter),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Interest'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								_user$project$Main$viewErr(model.interestInputErrorMessage)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$p,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(model)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$br,
+										{ctor: '[]'},
+										{ctor: '[]'}),
+									_1: {
+										ctor: '::',
+										_0: _user$project$Main$renderList(_user$project$Main$a),
+										_1: {
+											ctor: '::',
+											_0: _user$project$Main$renderTable(_user$project$Main$a),
+											_1: {ctor: '[]'}
+										}
+									}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$p,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(
+											_elm_lang$core$Basics$toString(
+												_user$project$Main$viewTc(model))),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$Main$main = _elm_lang$html$Html$beginnerProgram(
+	{model: _user$project$Main$initModel, view: _user$project$Main$view, update: _user$project$Main$update})();
