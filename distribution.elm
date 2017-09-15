@@ -189,6 +189,10 @@ main =
 
 filtered : Model -> List Int
 filtered model =
+    -- Set.toList (Set.diff (Set.fromList model.all) (Set.fromList model.out))
+    --groupInt (.fn)
+    --groupOut [0,1,2,3]
+    --model.all
     Set.toList (Set.diff (Set.fromList model.all) (Set.fromList model.out))
 
 
