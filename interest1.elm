@@ -10,6 +10,17 @@ type alias Tc =
     { calc_type : String, id : String, pbc : String, crd : String }
 
 
+type Field
+    = Pbc
+    | Dob
+    | Crd
+
+
+fields : List Field
+fields =
+    [ Pbc, Crd, Dob ]
+
+
 a : List Tc
 a =
     [ { id = "1", calc_type = "Modeling", pbc = "Brian", crd = "11/12/1958" }
@@ -107,6 +118,16 @@ renderHeaders headers =
     tr [] (List.map (\header -> th [ onClick (Sort header) ] [ text header ]) headers)
 
 
+renderRow : Html Msg
+renderRow =
+    tr [] [ td [] [ text "foobar" ] ]
+
+
+renderTd : Html Msg
+renderTd =
+    td [] [ text "foobar" ]
+
+
 headers : List String
 headers =
     [ "id", "pbc", "calc_type", "crd" ]
@@ -116,6 +137,7 @@ renderTable : List Tc -> Html Msg
 renderTable tc =
     table [ style [ ( "color", "red" ), ( "border", "solid" ) ] ]
         [ renderHeaders headers
+        , renderRow
         , tr []
             [ td []
                 [ text "foo" ]
