@@ -1,207 +1,281 @@
-var _user$project$Main$filtered = function (model) {
-	return _elm_lang$core$Set$toList(
+var _user$project$Main$header = function (_p0) {
+	return A2(
+		_elm_lang$html$Html$thead,
+		{ctor: '[]'},
 		A2(
-			_elm_lang$core$Set$diff,
-			_elm_lang$core$Set$fromList(model.all),
-			_elm_lang$core$Set$fromList(model.out)));
-};
-var _user$project$Main$config = {
-	first: 20,
-	rest: {
-		ctor: '::',
-		_0: 30,
-		_1: {
-			ctor: '::',
-			_0: 40,
-			_1: {
+			_elm_lang$core$List$map,
+			function (x) {
+				return A2(
+					_elm_lang$html$Html$th,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(x),
+						_1: {ctor: '[]'}
+					});
+			},
+			{
 				ctor: '::',
-				_0: 50,
+				_0: 'id',
 				_1: {
 					ctor: '::',
-					_0: 60,
-					_1: {ctor: '[]'}
+					_0: 'age',
+					_1: {
+						ctor: '::',
+						_0: 'pbc',
+						_1: {
+							ctor: '::',
+							_0: 'stat',
+							_1: {
+								ctor: '::',
+								_0: 'status',
+								_1: {
+									ctor: '::',
+									_0: 'dob',
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
 				}
-			}
-		}
-	}
+			}));
 };
-var _user$project$Main$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		if (_p0.ctor === 'ToggleGroupInt') {
-			var _p1 = _p0._0;
-			return (!A2(_elm_lang$core$List$member, _p1, model.groupOut)) ? _elm_lang$core$Native_Utils.update(
-				model,
-				{
-					groupOut: {ctor: '::', _0: _p1, _1: model.groupOut}
-				}) : _elm_lang$core$Native_Utils.update(
-				model,
-				{
-					groupOut: A2(
-						_elm_lang$core$List$filter,
-						function (e) {
-							return !_elm_lang$core$Native_Utils.eq(e, _p1);
-						},
-						model.groupOut)
-				});
-		} else {
-			var _p2 = _elm_lang$core$String$toInt(_p0._0);
-			if (_p2.ctor === 'Ok') {
-				var _p3 = _p2._0;
-				return (!A2(_elm_lang$core$List$member, _p3, model.out)) ? _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						out: {ctor: '::', _0: _p3, _1: model.out}
-					}) : _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						out: A2(
-							_elm_lang$core$List$filter,
-							function (e) {
-								return !_elm_lang$core$Native_Utils.eq(e, _p3);
-							},
-							model.out)
-					});
-			} else {
-				return model;
-			}
-		}
-	});
-var _user$project$Main$groupInt = {
+var _user$project$Main$td_age = function (person) {
+	return A2(
+		_elm_lang$html$Html$td,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				_elm_lang$core$Basics$toString(person.age)),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$st = {
 	ctor: '::',
-	_0: {
-		id: 0,
-		desc: '19 or less',
-		fn: function (x) {
-			return _elm_lang$core$Native_Utils.cmp(x, 20) < 0;
-		}
-	},
+	_0: {ctor: '_Tuple2', _0: 'border', _1: 'dotted'},
 	_1: {
 		ctor: '::',
-		_0: {
-			id: 1,
-			desc: '20-24',
-			fn: function (x) {
-				return (_elm_lang$core$Native_Utils.cmp(x, 20) > -1) && (_elm_lang$core$Native_Utils.cmp(x, 24) < 1);
-			}
-		},
+		_0: {ctor: '_Tuple2', _0: 'color', _1: 'red'},
+		_1: {ctor: '[]'}
+	}
+};
+var _user$project$Main$out = {
+	ctor: '::',
+	_0: 111,
+	_1: {
+		ctor: '::',
+		_0: 777,
 		_1: {
 			ctor: '::',
-			_0: {
-				id: 2,
-				desc: '25-29',
-				fn: function (x) {
-					return (_elm_lang$core$Native_Utils.cmp(x, 25) > -1) && (_elm_lang$core$Native_Utils.cmp(x, 29) < 1);
-				}
-			},
+			_0: 49,
 			_1: {
 				ctor: '::',
-				_0: {
-					id: 3,
-					desc: '30 or more',
-					fn: function (x) {
-						return _elm_lang$core$Native_Utils.cmp(x, 30) > -1;
-					}
-				},
+				_0: 101,
 				_1: {ctor: '[]'}
 			}
 		}
 	}
 };
-var _user$project$Main$isChecked = F2(
-	function (list, str) {
-		var _p4 = _elm_lang$core$String$toInt(str);
-		if (_p4.ctor === 'Ok') {
-			return A2(_elm_lang$core$List$member, _p4._0, list);
-		} else {
-			return false;
+var _user$project$Main$filtered = function (model) {
+	return A2(
+		_elm_lang$core$List$sortBy,
+		function (_) {
+			return _.id;
+		},
+		A2(
+			_elm_lang$core$List$filter,
+			function (p) {
+				return !A2(
+					F2(
+						function (x, y) {
+							return x && y;
+						}),
+					A2(
+						F2(
+							function (x, y) {
+								return _elm_lang$core$Native_Utils.cmp(x, y) > -1;
+							}),
+						p.age,
+						40),
+					A2(
+						F2(
+							function (x, y) {
+								return _elm_lang$core$Native_Utils.cmp(x, y) < 0;
+							}),
+						p.age,
+						10));
+			},
+			A2(
+				_elm_lang$core$List$filter,
+				function (p) {
+					return A2(
+						F2(
+							function (x, y) {
+								return x || y;
+							}),
+						A2(
+							F2(
+								function (x, y) {
+									return !_elm_lang$core$Native_Utils.eq(x, y);
+								}),
+							p.pbc,
+							_elm_lang$core$Maybe$Nothing),
+						A2(
+							F2(
+								function (x, y) {
+									return _elm_lang$core$Native_Utils.eq(x, y);
+								}),
+							p.age,
+							45));
+				},
+				A2(
+					_elm_lang$core$List$filter,
+					function (p) {
+						return A2(
+							F2(
+								function (x, y) {
+									return !_elm_lang$core$Native_Utils.eq(x, y);
+								}),
+							p.pbc,
+							_elm_lang$core$Maybe$Nothing);
+					},
+					A2(
+						_elm_lang$core$List$filter,
+						function (p) {
+							return !A2(_elm_lang$core$List$member, p.age, _user$project$Main$out);
+						},
+						A2(
+							_elm_lang$core$List$filter,
+							function (p) {
+								return A2(
+									F2(
+										function (x, y) {
+											return _elm_lang$core$Native_Utils.cmp(x, y) > 0;
+										}),
+									p.age,
+									30);
+							},
+							model.personList))))));
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'Mark':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						editing: _elm_lang$core$Maybe$Just(_p1._0)
+					});
+			case 'NoMark':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{editing: _elm_lang$core$Maybe$Nothing});
+			default:
+				var _p2 = model.editing;
+				if (_p2.ctor === 'Nothing') {
+					return model;
+				} else {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							editing: _elm_lang$core$Maybe$Nothing,
+							personList: A2(
+								_elm_lang$core$List$filter,
+								function (x) {
+									return !_elm_lang$core$Native_Utils.eq(x.id, _p2._0);
+								},
+								model.personList)
+						});
+				}
 		}
 	});
-var _user$project$Main$addN = F2(
-	function (n, dict) {
-		return A2(_elm_lang$core$Dict$member, n, dict) ? A3(
-			_elm_lang$core$Dict$update,
-			n,
-			_elm_lang$core$Maybe$map(
-				F2(
-					function (x, y) {
-						return x + y;
-					})(1)),
-			dict) : A3(_elm_lang$core$Dict$insert, n, 1, dict);
-	});
-var _user$project$Main$freqN = function (list) {
-	return A3(_elm_lang$core$List$foldl, _user$project$Main$addN, _elm_lang$core$Dict$empty, list);
-};
-var _user$project$Main$freq = function (list) {
-	return A3(_elm_lang$core$List$foldl, _user$project$Main$addN, _elm_lang$core$Dict$empty, list);
-};
-var _user$project$Main$addWord = F2(
-	function (word, dict) {
-		return A2(_elm_lang$core$Dict$member, word, dict) ? A3(
-			_elm_lang$core$Dict$update,
-			word,
-			_elm_lang$core$Maybe$map(
-				F2(
-					function (x, y) {
-						return x + y;
-					})(1)),
-			dict) : A3(_elm_lang$core$Dict$insert, word, 1, dict);
-	});
-var _user$project$Main$sentence = 'with this is a sentence with with with a few words in it';
-var _user$project$Main$frequency = A3(
-	_elm_lang$core$List$foldl,
-	_user$project$Main$addWord,
-	_elm_lang$core$Dict$empty,
-	A2(_elm_lang$core$String$split, ' ', _user$project$Main$sentence));
-var _user$project$Main$z = {a: 888, b: 4};
-var _user$project$Main$x = A2(
-	_elm_lang$core$List$append,
-	{
+var _user$project$Main$yy = {
+	ctor: '::',
+	_0: _elm_lang$core$Maybe$Just(1),
+	_1: {
 		ctor: '::',
-		_0: 111,
+		_0: _elm_lang$core$Maybe$Just(7),
 		_1: {
 			ctor: '::',
-			_0: 111,
-			_1: {ctor: '[]'}
-		}
-	},
-	{
-		ctor: '::',
-		_0: 111,
-		_1: {
-			ctor: '::',
-			_0: 111,
+			_0: _elm_lang$core$Maybe$Nothing,
 			_1: {
 				ctor: '::',
-				_0: 111,
+				_0: _elm_lang$core$Maybe$Just(43),
 				_1: {
 					ctor: '::',
-					_0: 10,
+					_0: _elm_lang$core$Maybe$Nothing,
 					_1: {
 						ctor: '::',
-						_0: 2,
+						_0: _elm_lang$core$Maybe$Just(104),
 						_1: {
 							ctor: '::',
-							_0: 3,
+							_0: _elm_lang$core$Maybe$Just(5),
 							_1: {
 								ctor: '::',
-								_0: 2,
+								_0: _elm_lang$core$Maybe$Just(3),
 								_1: {
 									ctor: '::',
-									_0: 4,
+									_0: _elm_lang$core$Maybe$Just(4),
 									_1: {
 										ctor: '::',
-										_0: 3,
+										_0: _elm_lang$core$Maybe$Just(43),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var _user$project$Main$x = {
+	ctor: '::',
+	_0: 1,
+	_1: {
+		ctor: '::',
+		_0: 7,
+		_1: {
+			ctor: '::',
+			_0: 43,
+			_1: {
+				ctor: '::',
+				_0: 104,
+				_1: {
+					ctor: '::',
+					_0: 5,
+					_1: {
+						ctor: '::',
+						_0: 3,
+						_1: {
+							ctor: '::',
+							_0: 4,
+							_1: {
+								ctor: '::',
+								_0: 43,
+								_1: {
+									ctor: '::',
+									_0: 5,
+									_1: {
+										ctor: '::',
+										_0: 34,
 										_1: {
 											ctor: '::',
-											_0: 5,
+											_0: 101,
 											_1: {
 												ctor: '::',
-												_0: 3,
+												_0: 50,
 												_1: {
 													ctor: '::',
-													_0: 2,
-													_1: {ctor: '[]'}
+													_0: 51,
+													_1: {
+														ctor: '::',
+														_0: 49,
+														_1: {ctor: '[]'}
+													}
 												}
 											}
 										}
@@ -213,182 +287,343 @@ var _user$project$Main$x = A2(
 				}
 			}
 		}
+	}
+};
+var _user$project$Main$xxx = A2(
+	_elm_lang$core$List$filter,
+	function (x) {
+		return !A2(_elm_lang$core$List$member, x, _user$project$Main$out);
+	},
+	A2(
+		_elm_lang$core$List$filter,
+		function (x) {
+			return A2(
+				F2(
+					function (x, y) {
+						return _elm_lang$core$Native_Utils.cmp(x, y) < 0;
+					}),
+				x,
+				50);
+		},
+		A2(
+			_elm_lang$core$List$filter,
+			function (x) {
+				return A2(
+					F2(
+						function (x, y) {
+							return !_elm_lang$core$Native_Utils.eq(x, y);
+						}),
+					x,
+					43);
+			},
+			A2(
+				_elm_lang$core$List$filter,
+				function (x) {
+					return A2(
+						F2(
+							function (x, y) {
+								return !_elm_lang$core$Native_Utils.eq(x, y);
+							}),
+						x,
+						7);
+				},
+				_user$project$Main$x))));
+var _user$project$Main$Person = F6(
+	function (a, b, c, d, e, f) {
+		return {id: a, age: b, pbc: c, stat: d, status: e, dob: f};
 	});
-var _user$project$Main$y = A3(
-	_elm_lang$core$List$foldl,
-	F2(
-		function (x, y) {
-			return {ctor: '::', _0: x, _1: y};
-		}),
-	{ctor: '[]'},
-	_user$project$Main$x);
-var _user$project$Main$frequencyN = A3(_elm_lang$core$List$foldl, _user$project$Main$addN, _elm_lang$core$Dict$empty, _user$project$Main$x);
-var _user$project$Main$Model = F4(
-	function (a, b, c, d) {
-		return {all: a, out: b, rangeOut: c, groupOut: d};
+var _user$project$Main$Model = F3(
+	function (a, b, c) {
+		return {personList: a, filter: b, editing: c};
 	});
-var _user$project$Main$initModel = A4(
-	_user$project$Main$Model,
-	_user$project$Main$x,
-	{ctor: '[]'},
-	{
+var _user$project$Main$T = {ctor: 'T'};
+var _user$project$Main$D = {ctor: 'D'};
+var _user$project$Main$A = {ctor: 'A'};
+var _user$project$Main$persons = function (list) {
+	return A2(
+		_elm_lang$core$List$map,
+		function (i) {
+			return A6(_user$project$Main$Person, 'x', i, _elm_lang$core$Maybe$Nothing, _user$project$Main$A, _elm_lang$core$Maybe$Nothing, '');
+		},
+		list);
+};
+var _user$project$Main$personList = {
+	ctor: '::',
+	_0: {
+		id: '1',
+		age: 44,
+		pbc: _elm_lang$core$Maybe$Just('Brian'),
+		stat: _user$project$Main$A,
+		status: _elm_lang$core$Maybe$Nothing,
+		dob: ''
+	},
+	_1: {
 		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 20, _1: true},
+		_0: {
+			id: '12',
+			age: 45,
+			pbc: _elm_lang$core$Maybe$Just('Brian'),
+			stat: _user$project$Main$A,
+			status: _elm_lang$core$Maybe$Just(_user$project$Main$A),
+			dob: ''
+		},
 		_1: {
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 30, _1: false},
+			_0: {
+				id: '22',
+				age: 45,
+				pbc: _elm_lang$core$Maybe$Just('Brian'),
+				stat: _user$project$Main$A,
+				status: _elm_lang$core$Maybe$Nothing,
+				dob: ''
+			},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 40, _1: false},
+				_0: {
+					id: '2',
+					age: 45,
+					pbc: _elm_lang$core$Maybe$Just('Brian'),
+					stat: _user$project$Main$A,
+					status: _elm_lang$core$Maybe$Nothing,
+					dob: ''
+				},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 50, _1: false},
+					_0: {id: '3', age: 34, pbc: _elm_lang$core$Maybe$Nothing, stat: _user$project$Main$A, status: _elm_lang$core$Maybe$Nothing, dob: ''},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 60, _1: false},
-						_1: {ctor: '[]'}
+						_0: {
+							id: '4',
+							age: 55,
+							pbc: _elm_lang$core$Maybe$Just('David'),
+							stat: _user$project$Main$A,
+							status: _elm_lang$core$Maybe$Nothing,
+							dob: ''
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								id: '5',
+								age: 45,
+								pbc: _elm_lang$core$Maybe$Just('Brian'),
+								stat: _user$project$Main$D,
+								status: _elm_lang$core$Maybe$Just(_user$project$Main$D),
+								dob: ''
+							},
+							_1: {
+								ctor: '::',
+								_0: {id: '6', age: 23, pbc: _elm_lang$core$Maybe$Nothing, stat: _user$project$Main$A, status: _elm_lang$core$Maybe$Nothing, dob: ''},
+								_1: {
+									ctor: '::',
+									_0: {id: '7', age: 24, pbc: _elm_lang$core$Maybe$Nothing, stat: _user$project$Main$A, status: _elm_lang$core$Maybe$Nothing, dob: ''},
+									_1: {
+										ctor: '::',
+										_0: {
+											id: '8',
+											age: 26,
+											pbc: _elm_lang$core$Maybe$Just('David'),
+											stat: _user$project$Main$A,
+											status: _elm_lang$core$Maybe$Nothing,
+											dob: ''
+										},
+										_1: {
+											ctor: '::',
+											_0: {
+												id: '9',
+												age: 25,
+												pbc: _elm_lang$core$Maybe$Just('Brian'),
+												stat: _user$project$Main$A,
+												status: _elm_lang$core$Maybe$Nothing,
+												dob: ''
+											},
+											_1: {
+												ctor: '::',
+												_0: {id: '10', age: 30, pbc: _elm_lang$core$Maybe$Nothing, stat: _user$project$Main$A, status: _elm_lang$core$Maybe$Nothing, dob: ''},
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			}
 		}
-	},
-	{ctor: '[]'});
-var _user$project$Main$ToggleGroupInt = function (a) {
-	return {ctor: 'ToggleGroupInt', _0: a};
+	}
 };
-var _user$project$Main$viewGroupInt = function (model) {
-	return A2(
-		_elm_lang$html$Html$fieldset,
-		{ctor: '[]'},
-		A2(
-			_elm_lang$core$List$map,
-			function (el) {
-				return A2(
-					_elm_lang$html$Html$label,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$input,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$type_('checkbox'),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$checked(true),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Events$onClick(
-											_user$project$Main$ToggleGroupInt(el.id)),
-										_1: {ctor: '[]'}
-									}
-								}
-							},
-							{ctor: '[]'}),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(el.desc),
-							_1: {ctor: '[]'}
-						}
-					});
-			},
-			_user$project$Main$groupInt));
-};
-var _user$project$Main$ToggleInt = function (a) {
-	return {ctor: 'ToggleInt', _0: a};
-};
-var _user$project$Main$checkbox = F3(
-	function (name, v, bool) {
-		return A2(
-			_elm_lang$html$Html$label,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$input,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$type_('checkbox'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$checked(bool),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Events$onClick(
-									_user$project$Main$ToggleInt(v)),
-								_1: {ctor: '[]'}
-							}
-						}
-					},
-					{ctor: '[]'}),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(name),
-					_1: {ctor: '[]'}
-				}
-			});
-	});
-var _user$project$Main$viewChecked = F2(
-	function (model, ele) {
-		return A2(
-			_elm_lang$html$Html$fieldset,
-			{ctor: '[]'},
-			A2(
-				_elm_lang$core$List$map,
-				function (el) {
-					return A3(
-						_user$project$Main$checkbox,
-						_elm_lang$core$Basics$toString(el),
-						_elm_lang$core$Basics$toString(el),
-						!A2(_elm_lang$core$List$member, el, model.out));
-				},
-				ele));
-	});
-var _user$project$Main$view = function (model) {
+var _user$project$Main$initModel = {personList: _user$project$Main$personList, filter: _user$project$Main$out, editing: _elm_lang$core$Maybe$Nothing};
+var _user$project$Main$DeleteMarked = {ctor: 'DeleteMarked'};
+var _user$project$Main$NoMark = {ctor: 'NoMark'};
+var _user$project$Main$viewMenu = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$h3,
+				_elm_lang$html$Html$p,
 				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							_elm_lang$core$Basics$toString(_user$project$Main$x),
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								' -> ',
-								_elm_lang$core$Basics$toString(
-									_user$project$Main$filtered(model))))),
+					_0: A2(
+						_elm_lang$html$Html$a,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$NoMark),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(' [Unmark] '),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$a,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$DeleteMarked),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(' [DeleteMarked] '),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$Mark = function (a) {
+	return {ctor: 'Mark', _0: a};
+};
+var _user$project$Main$person = function (x) {
+	return A2(
+		_elm_lang$html$Html$tr,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$td,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						_user$project$Main$Mark(x.id)),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(x.id),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
 				ctor: '::',
 				_0: A2(
-					_user$project$Main$viewChecked,
-					model,
-					_elm_lang$core$Dict$keys(
-						_user$project$Main$freqN(_user$project$Main$x))),
+					_elm_lang$html$Html$td,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_elm_lang$core$Basics$toString(x.age)),
+						_1: {ctor: '[]'}
+					}),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Main$viewGroupInt(model),
+					_0: A2(
+						_elm_lang$html$Html$td,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								_elm_lang$core$Basics$toString(x.pbc)),
+							_1: {ctor: '[]'}
+						}),
 					_1: {
 						ctor: '::',
 						_0: A2(
-							_elm_lang$html$Html$p,
+							_elm_lang$html$Html$td,
 							{ctor: '[]'},
 							{
 								ctor: '::',
 								_0: _elm_lang$html$Html$text(
-									_elm_lang$core$Basics$toString(model)),
+									_elm_lang$core$Basics$toString(x.stat)),
 								_1: {ctor: '[]'}
 							}),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$td,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(
+										_elm_lang$core$Basics$toString(x.status)),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$td,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(
+											_elm_lang$core$Basics$toString(x.dob)),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
 					}
+				}
+			}
+		});
+};
+var _user$project$Main$viewRows = function (model) {
+	return A2(
+		_elm_lang$core$List$map,
+		function (x) {
+			return _user$project$Main$person(x);
+		},
+		_user$project$Main$filtered(model));
+};
+var _user$project$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _user$project$Main$viewMenu(model),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$p,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_elm_lang$core$Basics$toString(model)),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$table,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$style(_user$project$Main$st),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _user$project$Main$header(model),
+							_1: _user$project$Main$viewRows(model)
+						}),
+					_1: {ctor: '[]'}
 				}
 			}
 		});
