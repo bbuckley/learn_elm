@@ -1,3 +1,13 @@
+var _user$project$Main$viewEditing = function (model) {
+	return A2(
+		_elm_lang$html$Html$p,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('todo'),
+			_1: {ctor: '[]'}
+		});
+};
 var _user$project$Main$header = function (_p0) {
 	return A2(
 		_elm_lang$html$Html$thead,
@@ -611,19 +621,23 @@ var _user$project$Main$view = function (model) {
 					}),
 				_1: {
 					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$table,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$style(_user$project$Main$st),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _user$project$Main$header(model),
-							_1: _user$project$Main$viewRows(model)
-						}),
-					_1: {ctor: '[]'}
+					_0: _user$project$Main$viewEditing(model),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$table,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$style(_user$project$Main$st),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _user$project$Main$header(model),
+								_1: _user$project$Main$viewRows(model)
+							}),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		});

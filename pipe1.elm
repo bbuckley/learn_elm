@@ -170,12 +170,18 @@ viewRows model =
     List.map (\x -> person x) (filtered model)
 
 
+viewEditing : Model -> Html Msg
+viewEditing model =
+    p [] [ text "todo" ]
+
+
 view : Model -> Html Msg
 view model =
     div
         []
         [ viewMenu model
         , p [] [ text (toString model) ]
+        , viewEditing model
 
         -- , ul [] (List.map (\x -> li [] [ text (toString x) ]) (filtered model))
         , table [ style st ] (header model :: viewRows model)
