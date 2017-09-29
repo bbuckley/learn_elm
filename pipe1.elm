@@ -57,6 +57,7 @@ type alias Model =
     { personList : List Person
     , filter : List Int
     , editing : Maybe String
+    , fld : Maybe String
     }
 
 
@@ -65,12 +66,16 @@ initModel =
     { personList = personList
     , filter = out
     , editing = Nothing
+    , fld = Nothing
     }
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
+        MarkField field ->
+            { model | fld = Just field }
+
         Mark id ->
             { model | editing = Just id }
 
@@ -93,6 +98,7 @@ type Msg
     = Mark String
     | NoMark
     | DeleteMarked
+    | MarkField String
 
 
 out : List Int
@@ -142,11 +148,11 @@ person : Person -> Html Msg
 person x =
     tr []
         [ td [ onClick (Mark x.id) ] [ text x.id ]
-        , td [] [ text (toString x.age) ]
-        , td [] [ text (toString x.pbc) ]
-        , td [] [ text (toString x.stat) ]
-        , td [] [ text (toString x.status) ]
-        , td [] [ text (toString x.dob) ]
+        , td [ onClick (Mark x.id) ] [ text (toString x.age) ]
+        , td [ onClick (MarkField "pbc") ] [ text (toString x.pbc) ]
+        , td [ onClick (MarkField "stat") ] [ text (toString x.stat) ]
+        , td [ onClick (MarkField "status") ] [ text (toString x.status) ]
+        , td [ onClick (MarkField "dob") ] [ text (toString x.dob) ]
         ]
 
 
@@ -175,6 +181,11 @@ viewEditing model =
     p [] [ text "todo" ]
 
 
+viewFooter : Model -> Html Msg
+viewFooter model =
+    div [] [ p [] [ text "footer" ] ]
+
+
 view : Model -> Html Msg
 view model =
     div
@@ -182,7 +193,6 @@ view model =
         [ viewMenu model
         , p [] [ text (toString model) ]
         , viewEditing model
-
-        -- , ul [] (List.map (\x -> li [] [ text (toString x) ]) (filtered model))
         , table [ style st ] (header model :: viewRows model)
+        , viewFooter model
         ]

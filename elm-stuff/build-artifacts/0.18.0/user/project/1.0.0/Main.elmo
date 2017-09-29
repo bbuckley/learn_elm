@@ -1,3 +1,20 @@
+var _user$project$Main$viewFooter = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('footer'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
 var _user$project$Main$viewEditing = function (model) {
 	return A2(
 		_elm_lang$html$Html$p,
@@ -172,6 +189,12 @@ var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p1 = msg;
 		switch (_p1.ctor) {
+			case 'MarkField':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						fld: _elm_lang$core$Maybe$Just(_p1._0)
+					});
 			case 'Mark':
 				return _elm_lang$core$Native_Utils.update(
 					model,
@@ -342,9 +365,9 @@ var _user$project$Main$Person = F6(
 	function (a, b, c, d, e, f) {
 		return {id: a, age: b, pbc: c, stat: d, status: e, dob: f};
 	});
-var _user$project$Main$Model = F3(
-	function (a, b, c) {
-		return {personList: a, filter: b, editing: c};
+var _user$project$Main$Model = F4(
+	function (a, b, c, d) {
+		return {personList: a, filter: b, editing: c, fld: d};
 	});
 var _user$project$Main$T = {ctor: 'T'};
 var _user$project$Main$D = {ctor: 'D'};
@@ -462,7 +485,10 @@ var _user$project$Main$personList = {
 		}
 	}
 };
-var _user$project$Main$initModel = {personList: _user$project$Main$personList, filter: _user$project$Main$out, editing: _elm_lang$core$Maybe$Nothing};
+var _user$project$Main$initModel = {personList: _user$project$Main$personList, filter: _user$project$Main$out, editing: _elm_lang$core$Maybe$Nothing, fld: _elm_lang$core$Maybe$Nothing};
+var _user$project$Main$MarkField = function (a) {
+	return {ctor: 'MarkField', _0: a};
+};
 var _user$project$Main$DeleteMarked = {ctor: 'DeleteMarked'};
 var _user$project$Main$NoMark = {ctor: 'NoMark'};
 var _user$project$Main$viewMenu = function (model) {
@@ -534,7 +560,12 @@ var _user$project$Main$person = function (x) {
 				ctor: '::',
 				_0: A2(
 					_elm_lang$html$Html$td,
-					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(
+							_user$project$Main$Mark(x.id)),
+						_1: {ctor: '[]'}
+					},
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
@@ -545,7 +576,12 @@ var _user$project$Main$person = function (x) {
 					ctor: '::',
 					_0: A2(
 						_elm_lang$html$Html$td,
-						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(
+								_user$project$Main$MarkField('pbc')),
+							_1: {ctor: '[]'}
+						},
 						{
 							ctor: '::',
 							_0: _elm_lang$html$Html$text(
@@ -556,7 +592,12 @@ var _user$project$Main$person = function (x) {
 						ctor: '::',
 						_0: A2(
 							_elm_lang$html$Html$td,
-							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(
+									_user$project$Main$MarkField('stat')),
+								_1: {ctor: '[]'}
+							},
 							{
 								ctor: '::',
 								_0: _elm_lang$html$Html$text(
@@ -567,7 +608,12 @@ var _user$project$Main$person = function (x) {
 							ctor: '::',
 							_0: A2(
 								_elm_lang$html$Html$td,
-								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(
+										_user$project$Main$MarkField('status')),
+									_1: {ctor: '[]'}
+								},
 								{
 									ctor: '::',
 									_0: _elm_lang$html$Html$text(
@@ -578,7 +624,12 @@ var _user$project$Main$person = function (x) {
 								ctor: '::',
 								_0: A2(
 									_elm_lang$html$Html$td,
-									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onClick(
+											_user$project$Main$MarkField('dob')),
+										_1: {ctor: '[]'}
+									},
 									{
 										ctor: '::',
 										_0: _elm_lang$html$Html$text(
@@ -636,7 +687,11 @@ var _user$project$Main$view = function (model) {
 								_0: _user$project$Main$header(model),
 								_1: _user$project$Main$viewRows(model)
 							}),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: _user$project$Main$viewFooter(model),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			}
