@@ -58,6 +58,7 @@ type alias Model =
     , filter : List Int
     , editing : Maybe String
     , fld : Maybe String
+    , srt : String
     }
 
 
@@ -67,20 +68,32 @@ initModel =
     , filter = out
     , editing = Nothing
     , fld = Nothing
+    , srt = "id"
     }
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        MarkField field ->
-            { model | fld = Just field }
+        Sort s ->
+            model
+
+        Orig ->
+            initModel
+
+        MarkField ( id, field ) ->
+            { model | fld = Just field, editing = Just id }
 
         Mark id ->
             { model | editing = Just id }
 
         NoMark ->
             { model | editing = Nothing }
+
+        Delete id ->
+            { model
+                | personList = List.filter (\x -> x.id /= id) model.personList
+            }
 
         DeleteMarked ->
             case model.editing of
@@ -96,9 +109,12 @@ update msg model =
 
 type Msg
     = Mark String
+    | Sort String
+    | Orig
     | NoMark
     | DeleteMarked
-    | MarkField String
+    | Delete String
+    | MarkField ( String, String )
 
 
 out : List Int
@@ -115,6 +131,19 @@ xxx =
         |> List.filter (\x -> not (List.member x out))
 
 
+
+--age = Person ->
+
+
+sort model =
+    case model.srt of
+        Nothing ->
+            \x -> x
+
+        _ ->
+            \x -> x
+
+
 filtered : Model -> List Person
 filtered model =
     model.personList
@@ -123,7 +152,8 @@ filtered model =
         |> List.filter (\p -> (/=) p.pbc Nothing)
         |> List.filter (\p -> (||) ((/=) p.pbc Nothing) ((==) p.age 45))
         |> List.filter (\p -> not ((&&) ((>=) p.age 40) ((<) p.age 10)))
-        |> List.sortBy .id
+        |> List.sort (sort model)
+        |> List.sortBy .age
 
 
 st : List ( String, String )
@@ -136,23 +166,24 @@ td_age person =
     td [] [ text (toString person.age) ]
 
 
-header : Model -> Html msg
-header _ =
+header : Model -> Html Msg
+header model =
     thead []
-        (List.map (\x -> th [] [ text x ])
-            [ "id", "age", "pbc", "stat", "status", "dob" ]
+        (List.map (\x -> th [ onClick (Sort x) ] [ text x ])
+            [ "", "id", "age", "pbc", "stat", "status", "dob" ]
         )
 
 
 person : Person -> Html Msg
 person x =
     tr []
-        [ td [ onClick (Mark x.id) ] [ text x.id ]
-        , td [ onClick (Mark x.id) ] [ text (toString x.age) ]
-        , td [ onClick (MarkField "pbc") ] [ text (toString x.pbc) ]
-        , td [ onClick (MarkField "stat") ] [ text (toString x.stat) ]
-        , td [ onClick (MarkField "status") ] [ text (toString x.status) ]
-        , td [ onClick (MarkField "dob") ] [ text (toString x.dob) ]
+        [ td [ onClick (Delete x.id) ] [ text "[x]" ]
+        , td [ onClick (MarkField ( x.id, "id" )) ] [ text x.id ]
+        , td [ onClick (MarkField ( x.id, "age" )) ] [ text (toString x.age) ]
+        , td [ onClick (MarkField ( x.id, "pbc" )) ] [ text (toString x.pbc) ]
+        , td [ onClick (MarkField ( x.id, "stat" )) ] [ text (toString x.stat) ]
+        , td [ onClick (MarkField ( x.id, "status" )) ] [ text (toString x.status) ]
+        , td [ onClick (MarkField ( x.id, "dob" )) ] [ text (toString x.dob) ]
         ]
 
 
@@ -167,6 +198,7 @@ viewMenu model =
         [ p []
             [ a [ onClick NoMark ] [ text " [Unmark] " ]
             , a [ onClick DeleteMarked ] [ text " [DeleteMarked] " ]
+            , a [ onClick Orig ] [ text " [Orig] " ]
             ]
         ]
 
