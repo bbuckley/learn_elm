@@ -6,9 +6,6 @@ import Html.Events exposing (onInput)
 import Table
 
 
--- import Tuple
-
-
 main : Program Never Model Msg
 main =
     Html.program
@@ -83,13 +80,6 @@ y =
     List.indexedMap (,) presidents
 
 
-
--- z =
---     Tuple.first ( 1, 2 )
--- y =
---     presidents >> List.indexedMap (,)
-
-
 viewDiv : List Person -> Html Msg
 viewDiv people =
     div [] [ text (toString y) ]
@@ -106,7 +96,6 @@ view { people, tableState, query } =
     in
     div []
         [ h1 [] [ text "Birthplaces of U.S. Presidents" ]
-        , viewDiv people
         , input [ placeholder "Search by Name", onInput SetQuery ] []
         , Table.view config tableState acceptablePeople
         ]
@@ -122,12 +111,14 @@ config =
             , Table.intColumn "Year" .year
             , Table.stringColumn "City" .city
             , Table.stringColumn "State" .state
+            , xx
             ]
         }
 
 
-
--- PEOPLE
+xx : Table.Column Person Msg
+xx =
+    Table.intColumn "Year111" .year
 
 
 type alias Person =
