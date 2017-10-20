@@ -1,4 +1,4 @@
-module Main exposing (..)
+module Pipe1 exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

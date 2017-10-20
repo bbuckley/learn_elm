@@ -5,7 +5,7 @@ module Main exposing (..)
 
 import Dict exposing (Dict)
 import Html exposing (..)
-import List.Extra
+import List
 import Pipe1 exposing (personList)
 
 
@@ -37,9 +37,10 @@ b =
     freq a |> Dict.toList
 
 
-d : List (List number)
-d =
-    List.Extra.permutations [ 4, 2, 2, 6 ]
+
+-- d : List (List number)
+-- d =
+--     List.Extra.permutations [ 4, 2, 2, 6 ]
 
 
 e : List (Maybe Int)
@@ -60,7 +61,10 @@ f =
         )
         e
         |> List.sort
-        |> List.Extra.group
+
+
+
+-- |> List.Extra.group
 
 
 pp : List Pipe1.Person
