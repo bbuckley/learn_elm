@@ -152,7 +152,7 @@ filtered model =
         |> List.filter (\p -> (/=) p.pbc Nothing)
         |> List.filter (\p -> (||) ((/=) p.pbc Nothing) ((==) p.age 45))
         |> List.filter (\p -> not ((&&) ((>=) p.age 40) ((<) p.age 10)))
-        |> List.sort (sort model)
+        -- |> List.sort (sort model)
         |> List.sortBy .age
 
 
