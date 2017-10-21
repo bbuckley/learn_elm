@@ -6,7 +6,7 @@ import Html.Events exposing (..)
 
 
 type Msg
-    = SetPbc String
+    = SetRic String
 
 
 type Ric
@@ -58,16 +58,24 @@ list =
 
 
 type alias Model =
-    { pbc : Ric
-    , mPbc : Maybe Ric
-    , inputPbc : String
+    { ric : Ric
+    , mRic : Maybe Ric
+    , inputRic : String
+    }
+
+
+initialModel : Model
+initialModel =
+    { ric = A
+    , mRic = Just A
+    , inputRic = "A"
     }
 
 
 main : Program Never Model Msg
 main =
     Html.beginnerProgram
-        { model = Model A Nothing "newInputPbc"
+        { model = initialModel
         , update = update
         , view = view
         }
@@ -76,14 +84,18 @@ main =
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetPbc input ->
-            { model | inputPbc = input, mPbc = stringToMaybeRic input }
+        SetRic input ->
+            { model
+                | inputRic = input
+                , mRic = stringToMaybeRic input
+                , ric = Maybe.withDefault model.ric (stringToMaybeRic input)
+            }
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ p [] [ text list ]
-        , input [ onInput SetPbc, value model.inputPbc ] []
+        , input [ placeholder "enter ric", onInput SetRic, value model.inputRic ] []
         , p [] [ text (toString model) ]
         ]
