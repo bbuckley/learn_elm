@@ -6,22 +6,25 @@ import Html.Events exposing (..)
 
 
 type Msg
+    = SetPbc String
+
+
+type Ric
     = A
     | B
     | C
-    | SetPbc String
 
 
-enumMsg : List Msg
-enumMsg =
+enumRic : List Ric
+enumRic =
     [ A
     , B
     , C
     ]
 
 
-stringToMaybeMsg : String -> Maybe Msg
-stringToMaybeMsg string =
+stringToMaybeRic : String -> Maybe Ric
+stringToMaybeRic string =
     case string of
         "A" ->
             Just A
@@ -36,9 +39,9 @@ stringToMaybeMsg string =
             Nothing
 
 
-msgToString : Msg -> String
-msgToString msg =
-    case msg of
+ricToString : Ric -> String
+ricToString ric =
+    case ric of
         A ->
             "A"
 
@@ -48,18 +51,15 @@ msgToString msg =
         C ->
             "C"
 
-        SetPbc s ->
-            "Set"
-
 
 list : String
 list =
-    List.foldl (\a b -> b ++ " " ++ msgToString a) "" enumMsg
+    List.foldl (\a b -> b ++ " " ++ ricToString a) "" enumRic
 
 
 type alias Model =
-    { pbc : Msg
-    , mPbc : Maybe Msg
+    { pbc : Ric
+    , mPbc : Maybe Ric
     , inputPbc : String
     }
 
@@ -77,10 +77,7 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         SetPbc input ->
-            { model | inputPbc = input, mPbc = stringToMaybeMsg input }
-
-        _ ->
-            model
+            { model | inputPbc = input, mPbc = stringToMaybeRic input }
 
 
 view : Model -> Html Msg
