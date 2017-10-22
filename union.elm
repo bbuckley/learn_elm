@@ -98,4 +98,7 @@ view model =
         [ p [] [ text list ]
         , input [ placeholder "enter ric", onInput SetRic, value model.inputRic ] []
         , p [] [ text (toString model) ]
+
+        -- , select [ on "change" (Json.map SetDuration targetValueIntParse) ]
+        --     (List.map durationOption (List.range 1 12))
         ]
