@@ -18,6 +18,14 @@ foobarEnum =
     [ MyNil, Foo, Bar ]
 
 
+
+-- fooDecoder : Json.Decode.Decoder FooBar
+-- fooDecoder =
+--     Json.Decode.map Foo Json.Decode.int
+-- foobarDecodel =
+--     Json.Decode.oneOf [ fooDecoder ]
+
+
 main : Program Never Model Msg
 main =
     beginnerProgram { model = { duration = 1, fooBar = Foo }, view = view, update = update }
@@ -54,10 +62,52 @@ fooBarDecoder =
                         Json.Decode.succeed MyNil
 
                     somethingElse ->
-                        -- Debug.log "this is a crash"
-                        Json.Decode.fail <|
-                            "Unknown fooBar: "
-                                ++ somethingElse
+                        Json.Decode.fail <| "Unknown fooBar: " ++ somethingElse
+            )
+
+
+viewOption : FooBar -> Html Msg
+viewOption foobar =
+    option
+        [ value <| toString foobar ]
+        [ text <| toString foobar ]
+
+
+
+-- targetValueFooBarDecoder : Json.Decode.Decoder FooBar
+-- targetValueFooBarDecoder =
+--     targetValue
+--         `Json.Decode.andThen`
+--             (\val ->
+--                 case val of
+--                     "Foo" ->
+--                         Json.Decode.succeed Foo
+--                     "Bar" ->
+--                         Json.Decode.succeed Bar
+--                     "MyNil" ->
+--                         Json.Decode.succeed MyNil
+--                     _ ->
+--                         Json.Decode.fail ("Invalid Role: " ++ val)
+--             )
+
+
+fooBarDecoderx : Json.Decode.Decoder FooBar
+fooBarDecoderx =
+    Json.Decode.string
+        |> Json.Decode.andThen
+            (\str ->
+                case str of
+                    "Foo" ->
+                        Json.Decode.succeed Foo
+
+                    "Bar" ->
+                        Json.Decode.succeed Bar
+
+                    "MyNil" ->
+                        Json.Decode.succeed MyNil
+
+                    somethingElse ->
+                        Json.Decode.fail <| "Unknown fooBar: " ++ somethingElse
             )
 
 
