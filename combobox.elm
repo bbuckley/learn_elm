@@ -261,14 +261,17 @@ type Msg
     = A
 
 
-update : Msg -> Color -> Color
-update msg model =
-    model
 
-
-
+-- update : Msg -> Color -> Color
+-- update msg model =
+--     model
 -- type alias Model =
 --     { color : Color }
+
+
+update : msg -> model -> model
+update msg model =
+    model
 
 
 main : Program Never Color Color
