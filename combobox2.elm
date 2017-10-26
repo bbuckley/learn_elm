@@ -139,10 +139,21 @@ view model =
         ]
 
 
+initModel : Model
+initModel =
+    { title = Dr
+    , firstName = "Albert"
+    , lastName = "Einstien"
+    , foobar = Bar
+    , suit = Diamonds
+    , msuit = Nothing
+    }
+
+
 main : Program Never Model Msg
 main =
     Html.beginnerProgram
-        { model = Model Dr "Albert" "Einstein" Foo Clubs Nothing
+        { model = initModel --Model Dr "Albert" "Einstein" Foo Clubs Nothing
         , update = update
         , view = view
         }
