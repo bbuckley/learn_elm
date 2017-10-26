@@ -18,6 +18,16 @@ type Suit
     | Clubs
 
 
+suits : List Suit
+suits =
+    [ Hearts, Spades, Diamonds, Clubs ]
+
+
+addNothing : List a -> List (Maybe a)
+addNothing list =
+    Nothing :: list
+
+
 type Title
     = Dr
     | Mrs
@@ -123,15 +133,13 @@ viewSuits model =
 view : Model -> Html Msg
 view model =
     Html.div []
-        [ K.comboBox [] toString [ Dr, Mrs, Ms, Mr, Master, Miss ] model.title
-            |> Html.map NewTitle
-        , K.lineEdit [] model.firstName
-            |> Html.map NewFirstName
-        , K.lineEdit [] model.lastName
-            |> Html.map NewLastName
+        [ K.comboBox [] toString [ Dr, Mrs, Ms, Mr, Master, Miss ] model.title |> Html.map NewTitle
+        , K.lineEdit [] model.firstName |> Html.map NewFirstName
+        , K.lineEdit [] model.lastName |> Html.map NewLastName
         , K.comboBox [] toString [ Nil, Foo, Bar ] model.foobar |> Html.map NewFooBar
-        , K.comboBox [] toStringFooBar [ Nil, Foo, Bar ] model.foobar |> Html.map NewFooBar
+        , K.comboBox [] toStringFooBar [ Nil, Bar ] model.foobar |> Html.map NewFooBar
         , K.comboBox [] toString [ Hearts, Spades, Diamonds, Clubs ] model.suit |> Html.map NewSuit
+        , K.comboBox [] toString suits model.suit |> Html.map NewSuit
         , K.comboBox [] toStringMaybe [ Nothing, Just Hearts, Just Spades, Just Diamonds, Just Clubs ] model.msuit |> Html.map NewMSuit
         , viewSuits model
         , Html.br [] []
@@ -147,6 +155,7 @@ initModel =
     , foobar = Bar
     , suit = Diamonds
     , msuit = Nothing
+    , mRic = Nothing
     }
 
 
