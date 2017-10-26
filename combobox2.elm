@@ -23,10 +23,9 @@ suits =
     [ Hearts, Spades, Diamonds, Clubs ]
 
 
-
--- addNothing : List a -> List (Maybe a)
--- addNothing list =
---     Nothing :: list
+addNothing : List a -> List (Maybe a)
+addNothing list =
+    Nothing :: List.map (\x -> Just x) list
 
 
 type Title
@@ -45,10 +44,34 @@ type Ric
     | N999
 
 
+rics : List Ric
+rics =
+    [ EXE, SUB, BANK, N999 ]
+
+
+type LOAType
+    = MED
+    | LTD
+    | MIL
+
+
 type Event
     = TER
-    | LOA (Maybe String)
+    | LOA (Maybe LOAType)
     | XFR
+
+
+events : List Event
+events =
+    [ TER, XFR, LOA (Just MED), LOA Nothing, LOA (Just MIL) ]
+
+
+type Stat
+    = A
+    | T
+    | L
+    | D
+    | X
 
 
 type alias Model =
@@ -128,7 +151,7 @@ viewSuit suit model =
 
 viewSuits : Model -> Html Msg
 viewSuits model =
-    Html.div [] (List.map (\x -> viewSuit x model) [ Hearts, Spades, Diamonds, Clubs ])
+    Html.div [] (List.map (\x -> viewSuit x model) suits)
 
 
 view : Model -> Html Msg
@@ -141,7 +164,7 @@ view model =
         , K.comboBox [] toStringFooBar [ Nil, Bar ] model.foobar |> Html.map NewFooBar
         , K.comboBox [] toString [ Hearts, Spades, Diamonds, Clubs ] model.suit |> Html.map NewSuit
         , K.comboBox [] toString suits model.suit |> Html.map NewSuit
-        , K.comboBox [] toStringMaybe [ Nothing, Just Hearts, Just Spades, Just Diamonds, Just Clubs ] model.msuit |> Html.map NewMSuit
+        , K.comboBox [] toStringMaybe (addNothing suits) model.msuit |> Html.map NewMSuit
         , viewSuits model
         , Html.br [] []
         , Html.text (toString model)
