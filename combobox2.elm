@@ -23,9 +23,10 @@ suits =
     [ Hearts, Spades, Diamonds, Clubs ]
 
 
-addNothing : List a -> List (Maybe a)
-addNothing list =
-    Nothing :: list
+
+-- addNothing : List a -> List (Maybe a)
+-- addNothing list =
+--     Nothing :: list
 
 
 type Title
