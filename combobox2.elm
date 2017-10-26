@@ -23,9 +23,19 @@ suits =
     [ Hearts, Spades, Diamonds, Clubs ]
 
 
+just : a -> Maybe a
+just a =
+    Just a
+
+
 addNothing : List a -> List (Maybe a)
 addNothing list =
     Nothing :: List.map (\x -> Just x) list
+
+
+
+-- Nothing :: List.map just list
+-- Nothing :: List.map (Just x) list
 
 
 type Title
@@ -82,6 +92,7 @@ type alias Model =
     , suit : Suit
     , msuit : Maybe Suit
     , mRic : Maybe Ric
+    , done : Bool
 
     -- , ricSet : Set Ric
     }
@@ -94,11 +105,12 @@ type Msg
     | NewFooBar FooBar
     | NewSuit Suit
     | NewMSuit (Maybe Suit)
+    | NoOp Bool
 
 
 update : Msg -> Model -> Model
-update message model =
-    case message of
+update msg model =
+    case msg of
         NewTitle newTitle ->
             { model | title = newTitle }
 
@@ -116,6 +128,9 @@ update message model =
 
         NewMSuit msuit ->
             { model | msuit = msuit }
+
+        NoOp b ->
+            { model | done = b }
 
 
 toStringFooBar : FooBar -> String
@@ -165,6 +180,8 @@ view model =
         , K.comboBox [] toString [ Hearts, Spades, Diamonds, Clubs ] model.suit |> Html.map NewSuit
         , K.comboBox [] toString suits model.suit |> Html.map NewSuit
         , K.comboBox [] toStringMaybe (addNothing suits) model.msuit |> Html.map NewMSuit
+        , Html.label [] [ Html.text "Done" ]
+        , checkbox [] model.done |> Html.map NoOp
         , viewSuits model
         , Html.br [] []
         , Html.text (toString model)
@@ -180,6 +197,7 @@ initModel =
     , suit = Diamonds
     , msuit = Nothing
     , mRic = Nothing
+    , done = False
     }
 
 
