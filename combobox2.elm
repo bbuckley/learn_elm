@@ -27,6 +27,19 @@ type Title
     | Miss
 
 
+type Ric
+    = EXE
+    | SUB
+    | BANK
+    | N999
+
+
+type Event
+    = TER
+    | LOA (Maybe String)
+    | XFR
+
+
 type alias Model =
     { title : Title
     , firstName : String
@@ -34,6 +47,9 @@ type alias Model =
     , foobar : FooBar
     , suit : Suit
     , msuit : Maybe Suit
+    , mRic : Maybe Ric
+
+    -- , ricSet : Set Ric
     }
 
 
