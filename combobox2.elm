@@ -204,7 +204,7 @@ initModel =
 main : Program Never Model Msg
 main =
     Html.beginnerProgram
-        { model = initModel --Model Dr "Albert" "Einstein" Foo Clubs Nothing
+        { model = initModel
         , update = update
         , view = view
         }
