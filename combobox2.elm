@@ -3,6 +3,7 @@ module Combobox2 exposing (..)
 import Html exposing (Html)
 import Html.Attributes as Attributes
 import Kintail.InputWidget as K exposing (checkbox)
+import Set exposing (Set, member)
 
 
 type FooBar
@@ -93,8 +94,7 @@ type alias Model =
     , msuit : Maybe Suit
     , mRic : Maybe Ric
     , done : Bool
-
-    -- , ricSet : Set Ric
+    , ricSet : Set String --really s/b Set Ric
     }
 
 
@@ -105,7 +105,8 @@ type Msg
     | NewFooBar FooBar
     | NewSuit Suit
     | NewMSuit (Maybe Suit)
-    | NoOp Bool
+    | NewDone Bool
+    | ToggleRic Bool --want the to be Ric
 
 
 update : Msg -> Model -> Model
@@ -129,8 +130,11 @@ update msg model =
         NewMSuit msuit ->
             { model | msuit = msuit }
 
-        NoOp b ->
+        NewDone b ->
             { model | done = b }
+
+        ToggleRic ricString ->
+            model
 
 
 toStringFooBar : FooBar -> String
@@ -169,6 +173,19 @@ viewSuits model =
     Html.div [] (List.map (\x -> viewSuit x model) suits)
 
 
+viewRic : Ric -> Model -> Html Msg
+viewRic ric model =
+    Html.span []
+        [ Html.label [ Attributes.for (toString ric) ] [ Html.text (toString ric) ]
+        , checkbox [] (member (toString ric) model.ricSet) |> Html.map ToggleRic
+        ]
+
+
+viewRics : Model -> Html Msg
+viewRics model =
+    Html.div [] (List.map (\x -> viewRic x model) rics)
+
+
 view : Model -> Html Msg
 view model =
     Html.div []
@@ -181,8 +198,9 @@ view model =
         , K.comboBox [] toString suits model.suit |> Html.map NewSuit
         , K.comboBox [] toStringMaybe (addNothing suits) model.msuit |> Html.map NewMSuit
         , Html.label [] [ Html.text "Done" ]
-        , checkbox [] model.done |> Html.map NoOp
+        , checkbox [] model.done |> Html.map NewDone
         , viewSuits model
+        , viewRics model
         , Html.br [] []
         , Html.text (toString model)
         ]
@@ -198,6 +216,7 @@ initModel =
     , msuit = Nothing
     , mRic = Nothing
     , done = False
+    , ricSet = Set.fromList [ "N999", "BANK" ]
     }
 
 
