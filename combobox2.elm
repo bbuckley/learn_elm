@@ -24,11 +24,6 @@ suits =
     [ Hearts, Spades, Diamonds, Clubs ]
 
 
-just : a -> Maybe a
-just a =
-    Just a
-
-
 addNothing : List a -> List (Maybe a)
 addNothing list =
     Nothing :: List.map (\x -> Just x) list
