@@ -265,6 +265,7 @@ view model =
         , viewSuits model
         , viewRics model
         , viewRics2 model
+        , bcheckbox model.hasLoa ChangeLoa "LOA"
         , Html.br [] []
         , Html.text (toString model)
         ]
