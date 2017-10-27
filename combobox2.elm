@@ -1,7 +1,8 @@
 module Combobox2 exposing (..)
 
-import Html exposing (Html)
-import Html.Attributes as Attributes
+import Html exposing (Html, label, text)
+import Html.Attributes as Attributes exposing (checked, style, type_)
+import Html.Events exposing (onClick)
 import Kintail.InputWidget as K exposing (checkbox)
 import Set exposing (Set, member)
 
@@ -55,6 +56,11 @@ rics =
     [ EXE, SUB, BANK, N999 ]
 
 
+ricString : List String
+ricString =
+    List.map toString rics
+
+
 type LOAType
     = MED
     | LTD
@@ -90,6 +96,7 @@ type alias Model =
     , mRic : Maybe Ric
     , done : Bool
     , ricSet : Set String --really s/b Set Ric
+    , selectedRics : Set String
     }
 
 
@@ -101,7 +108,9 @@ type Msg
     | NewSuit Suit
     | NewMSuit (Maybe Suit)
     | NewDone Bool
-    | ToggleRic Bool --want the to be Ric
+    | ToggleRic Bool --Ric --want the to be Ric
+    | Select String
+    | Deselect String
 
 
 update : Msg -> Model -> Model
@@ -130,6 +139,12 @@ update msg model =
 
         ToggleRic ricString ->
             model
+
+        Select ric ->
+            { model | selectedRics = Set.insert ric model.selectedRics }
+
+        Deselect ric ->
+            { model | selectedRics = Set.remove ric model.selectedRics }
 
 
 toStringFooBar : FooBar -> String
@@ -172,6 +187,8 @@ viewRic : Ric -> Model -> Html Msg
 viewRic ric model =
     Html.span []
         [ Html.label [ Attributes.for (toString ric) ] [ Html.text (toString ric) ]
+
+        -- , checkbox [] (member (toString ric) model.ricSet) |> Html.map ToggleRic
         , checkbox [] (member (toString ric) model.ricSet) |> Html.map ToggleRic
         ]
 
@@ -179,6 +196,41 @@ viewRic ric model =
 viewRics : Model -> Html Msg
 viewRics model =
     Html.div [] (List.map (\x -> viewRic x model) rics)
+
+
+viewRics2 : Model -> Html Msg
+viewRics2 model =
+    Html.div []
+        [ Html.h2 [] [ Html.text "RICS" ]
+        , Html.fieldset [] (List.map (mycheckbox model.selectedRics) ricString)
+        ]
+
+
+mycheckbox : Set String -> String -> Html Msg
+mycheckbox selectedRics ric =
+    let
+        isChecked =
+            Set.member ric selectedRics
+
+        msg =
+            if isChecked then
+                Deselect ric
+            else
+                Select ric
+    in
+    label [ style [ ( "display", "block" ) ] ]
+        [ Html.input
+            [ type_ "checkbox"
+            , checked (Set.member ric selectedRics)
+            , onClick msg
+            ]
+            []
+        , Html.text ric
+        ]
+
+
+
+--
 
 
 view : Model -> Html Msg
@@ -196,6 +248,7 @@ view model =
         , checkbox [] model.done |> Html.map NewDone
         , viewSuits model
         , viewRics model
+        , viewRics2 model
         , Html.br [] []
         , Html.text (toString model)
         ]
@@ -212,6 +265,7 @@ initModel =
     , mRic = Nothing
     , done = False
     , ricSet = Set.fromList [ "N999", "BANK" ]
+    , selectedRics = Set.empty
     }
 
 
