@@ -1,6 +1,6 @@
 module Combobox2 exposing (..)
 
-import Html exposing (Html, label, text)
+import Html exposing (Html, input, label, text)
 import Html.Attributes as Attributes exposing (checked, style, type_)
 import Html.Events exposing (onClick)
 import Kintail.InputWidget as K exposing (checkbox)
@@ -56,9 +56,10 @@ rics =
     [ EXE, SUB, BANK, N999 ]
 
 
-ricString : List String
-ricString =
-    List.map toString rics
+
+-- ricString : List String
+-- ricString =
+--     List.map toString rics
 
 
 type LOAType
@@ -97,6 +98,7 @@ type alias Model =
     , done : Bool
     , ricSet : Set String --really s/b Set Ric
     , selectedRics : Set String
+    , hasLoa : Bool
     }
 
 
@@ -111,6 +113,7 @@ type Msg
     | ToggleRic Bool --Ric --want the to be Ric
     | Select String
     | Deselect String
+    | ChangeLoa
 
 
 update : Msg -> Model -> Model
@@ -145,6 +148,9 @@ update msg model =
 
         Deselect ric ->
             { model | selectedRics = Set.remove ric model.selectedRics }
+
+        ChangeLoa ->
+            { model | hasLoa = not model.hasLoa }
 
 
 toStringFooBar : FooBar -> String
@@ -202,7 +208,7 @@ viewRics2 : Model -> Html Msg
 viewRics2 model =
     Html.div []
         [ Html.h2 [] [ Html.text "RICS" ]
-        , Html.fieldset [] (List.map (mycheckbox model.selectedRics) ricString)
+        , Html.fieldset [] (List.map (mycheckbox model.selectedRics) (List.map toString rics))
         ]
 
 
@@ -219,10 +225,12 @@ mycheckbox selectedRics ric =
                 Select ric
     in
     label [ style [ ( "display", "block" ) ] ]
-        [ Html.input
+        [ input
             [ type_ "checkbox"
             , checked (Set.member ric selectedRics)
             , onClick msg
+
+            -- , onClick (ChangeRic ric isChecked)
             ]
             []
         , Html.text ric
@@ -244,8 +252,9 @@ view model =
         , K.comboBox [] toString [ Hearts, Spades, Diamonds, Clubs ] model.suit |> Html.map NewSuit
         , K.comboBox [] toString suits model.suit |> Html.map NewSuit
         , K.comboBox [] toStringMaybe (addNothing suits) model.msuit |> Html.map NewMSuit
-        , Html.label [] [ Html.text "Done" ]
+        , label [] [ text "Done" ]
         , checkbox [] model.done |> Html.map NewDone
+        , label [] [ input [ type_ "checkbox", checked model.hasLoa, onClick ChangeLoa ] [], text "Has LOA" ]
         , viewSuits model
         , viewRics model
         , viewRics2 model
@@ -266,6 +275,7 @@ initModel =
     , done = False
     , ricSet = Set.fromList [ "N999", "BANK" ]
     , selectedRics = Set.empty
+    , hasLoa = False
     }
 
 
