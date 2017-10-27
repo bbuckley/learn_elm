@@ -237,6 +237,11 @@ mycheckbox selectedRics ric =
         ]
 
 
+bcheckbox : Bool -> Msg -> String -> Html Msg
+bcheckbox bool msg string =
+    label [] [ input [ type_ "checkbox", checked bool, onClick msg ] [], text string ]
+
+
 
 --
 
@@ -255,6 +260,8 @@ view model =
         , label [] [ text "Done" ]
         , checkbox [] model.done |> Html.map NewDone
         , label [] [ input [ type_ "checkbox", checked model.hasLoa, onClick ChangeLoa ] [], text "Has LOA" ]
+        , label [] [ input [ type_ "checkbox", checked model.hasLoa, onClick ChangeLoa ] [], text "Has REH" ]
+        , bcheckbox model.hasLoa ChangeLoa "Has loa??"
         , viewSuits model
         , viewRics model
         , viewRics2 model
