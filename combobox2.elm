@@ -3,7 +3,7 @@ module Combobox2 exposing (..)
 import Html exposing (Html, input, label, text)
 import Html.Attributes as Attributes exposing (checked, style, type_)
 import Html.Events exposing (onClick)
-import Kintail.InputWidget as K exposing (checkbox)
+import Kintail.InputWidget as K
 import Set exposing (Set, member)
 
 
@@ -87,6 +87,16 @@ type Stat
     | X
 
 
+stats : List Stat
+stats =
+    [ A, T, L, D ]
+
+
+statsString : List String
+statsString =
+    List.map toString stats
+
+
 type alias Model =
     { title : Title
     , firstName : String
@@ -96,7 +106,7 @@ type alias Model =
     , msuit : Maybe Suit
     , mRic : Maybe Ric
     , done : Bool
-    , ricSet : Set String --really s/b Set Ric
+    , ricSet : Set String --really wanted Set Ric but has to be comparable?
     , selectedRics : Set String
     , hasLoa : Bool
     }
@@ -195,7 +205,7 @@ viewRic ric model =
         [ Html.label [ Attributes.for (toString ric) ] [ Html.text (toString ric) ]
 
         -- , checkbox [] (member (toString ric) model.ricSet) |> Html.map ToggleRic
-        , checkbox [] (member (toString ric) model.ricSet) |> Html.map ToggleRic
+        , K.checkbox [] (member (toString ric) model.ricSet) |> Html.map ToggleRic
         ]
 
 
@@ -237,8 +247,8 @@ mycheckbox selectedRics ric =
         ]
 
 
-bcheckbox : Bool -> Msg -> String -> Html Msg
-bcheckbox bool msg string =
+checkbox : String -> Bool -> Msg -> Html Msg
+checkbox string bool msg =
     label [] [ input [ type_ "checkbox", checked bool, onClick msg ] [], text string ]
 
 
@@ -258,10 +268,10 @@ view model =
         , K.comboBox [] toString suits model.suit |> Html.map NewSuit
         , K.comboBox [] toStringMaybe (addNothing suits) model.msuit |> Html.map NewMSuit
         , label [] [ text "Done" ]
-        , checkbox [] model.done |> Html.map NewDone
+        , K.checkbox [] model.done |> Html.map NewDone
         , label [] [ input [ type_ "checkbox", checked model.hasLoa, onClick ChangeLoa ] [], text "Has LOA" ]
         , label [] [ input [ type_ "checkbox", checked model.hasLoa, onClick ChangeLoa ] [], text "Has REH" ]
-        , bcheckbox model.hasLoa ChangeLoa "Has loa??"
+        , checkbox "Has loa??" model.hasLoa ChangeLoa
         , viewSuits model
         , viewRics model
         , viewRics2 model
