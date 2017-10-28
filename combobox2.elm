@@ -109,6 +109,7 @@ type alias Model =
     , ricSet : Set String --really wanted Set Ric but has to be comparable?
     , selectedRics : Set String
     , hasLoa : Bool
+    , mStat : Maybe Stat
     }
 
 
@@ -124,6 +125,7 @@ type Msg
     | Select String
     | Deselect String
     | ChangeLoa
+    | NewMStat (Maybe Stat)
 
 
 update : Msg -> Model -> Model
@@ -146,6 +148,9 @@ update msg model =
 
         NewMSuit msuit ->
             { model | msuit = msuit }
+
+        NewMStat mStat ->
+            { model | mStat = mStat }
 
         NewDone b ->
             { model | done = b }
@@ -267,6 +272,9 @@ view model =
         , K.comboBox [] toString [ Hearts, Spades, Diamonds, Clubs ] model.suit |> Html.map NewSuit
         , K.comboBox [] toString suits model.suit |> Html.map NewSuit
         , K.comboBox [] toStringMaybe (addNothing suits) model.msuit |> Html.map NewMSuit
+        , K.comboBox [] toStringMaybe (addNothing stats) model.mStat |> Html.map NewMStat
+
+        -- , K.lineEdit [] (toString model.mStat) |> Html.map NewLastName
         , label [] [ text "Done" ]
         , K.checkbox [] model.done |> Html.map NewDone
         , label [] [ input [ type_ "checkbox", checked model.hasLoa, onClick ChangeLoa ] [], text "Has LOA" ]
@@ -275,7 +283,7 @@ view model =
         , viewSuits model
         , viewRics model
         , viewRics2 model
-        , bcheckbox model.hasLoa ChangeLoa "LOA"
+        , checkbox "LOA" model.hasLoa ChangeLoa
         , Html.br [] []
         , Html.text (toString model)
         ]
@@ -294,6 +302,7 @@ initModel =
     , ricSet = Set.fromList [ "N999", "BANK" ]
     , selectedRics = Set.empty
     , hasLoa = False
+    , mStat = Nothing
     }
 
 
