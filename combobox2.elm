@@ -48,12 +48,13 @@ type Ric
     = EXE
     | SUB
     | BANK
+    | N998
     | N999
 
 
 rics : List Ric
 rics =
-    [ EXE, SUB, BANK, N999 ]
+    [ EXE, SUB, BANK, N998, N999 ]
 
 
 
