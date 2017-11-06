@@ -23,7 +23,7 @@ y n =
 
 
 xxx n =
-    String.repeat n "s"
+    ( n, String.repeat n "s" )
 
 
 aaaa : Int -> Float -> c -> String
