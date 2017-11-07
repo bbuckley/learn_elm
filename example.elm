@@ -25,6 +25,7 @@ type Msg
     | AddItem
     | Reverse
     | Find String
+    | AddItemN Int
 
 
 main : Program Never Model Msg
@@ -40,7 +41,7 @@ init : Model
 init =
     let
         things =
-            List.map (toString >> (++) "item ") <| List.range 1 37
+            List.map (toString >> (++) "item ") <| List.range 1 137
     in
     { things = Paginate.fromList 10 things
     , reversed = False
@@ -94,6 +95,10 @@ update msg model =
                 , globalId = newId
             }
 
+        AddItemN n ->
+            -- not done
+            model
+
         Reverse ->
             { model | reversed = not model.reversed }
 
@@ -134,6 +139,7 @@ view filteredSortedThings =
                             , "items"
                             ]
                     , u [ onClick <| AddItem, style [ ( "cursor", "pointer" ) ] ] [ text " (add more!)" ]
+                    , u [ onClick <| AddItemN 10, style [ ( "cursor", "pointer" ) ] ] [ text " (add 10 more!)" ]
                     ]
                 , text <|
                     String.join " "
