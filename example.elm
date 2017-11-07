@@ -210,3 +210,10 @@ view filteredSortedThings =
             ++ prevButtons
             ++ [ span [] <| Paginate.pager pagerButtonView filteredSortedThings ]
             ++ nextButtons
+
+
+
+-- buttons filteredSortedThings =
+--     [ button [ onClick First, disabled <| Paginate.isFirst filteredSortedThings ] [ text "<<" ]
+--     , button [ onClick Prev, disabled <| Paginate.isFirst filteredSortedThings ] [ text "<" ]
+--     ]
