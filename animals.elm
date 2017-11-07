@@ -42,15 +42,8 @@ x =
 view : Model -> Html Msg
 view model =
     div []
-        [ select
-            [ onInput x ]
-            (List.map viewOptions model.animals)
-        , select [ onInput x ]
-            (List.map viewOptions model.animals)
-        , select [ onInput x ]
-            (List.map viewOptions model.animals)
-        , select [ onInput x ]
-            (List.map viewOptions model.animals)
+        [ select [ onInput x ] (List.map (\x -> viewOptions2 model x) model.animals)
+        , select [ onInput x ] (List.map (\x -> viewOptions2 model x) model.animals)
         , Maybe.map .name model.selected
             |> Maybe.withDefault "--"
             |> text
@@ -63,10 +56,48 @@ xx animal =
     value <| toString animal.id
 
 
-viewOptions : Animal -> Html msg
-viewOptions animal =
-    --  option [ value <| toString animal.id ] [ text animal.name ]
-    option [ xx animal, selected <| False ] [ text animal.name ]
+sel : Model -> Animal -> Bool
+sel model animal =
+    case model.selected of
+        Nothing ->
+            False
+
+        Just v ->
+            animal.id == v.id
+
+
+
+-- msel : Model -> Maybe Animal -> Bool
+-- msel model manimal =
+--     case manimal of
+--         Nothing ->
+--             model.selected == Nothing
+--         Just v ->
+--             model.selected == v
+-- viewOptions : Animal -> Html msg
+-- viewOptions animal =
+--     option [ value <| toString animal.id ] [ text animal.name ]
+
+
+viewOptions2 : Model -> Animal -> Html msg
+viewOptions2 model animal =
+    option [ xx animal, selected <| sel model animal ] [ text animal.name ]
+
+
+xxx : Maybe Animal -> Html.Attribute msg
+xxx animal =
+    case animal of
+        Nothing ->
+            value <| "---"
+
+        Just v ->
+            value <| toString v.id
+
+
+
+-- viewOptions3 : Model -> Maybe Animal -> Html msg
+-- viewOptions3 model animal =
+--     option [ xxx animal, selected <| msel model animal ] [ text animal.name ]
 
 
 getAnimalFromId : List Animal -> String -> Maybe Animal
