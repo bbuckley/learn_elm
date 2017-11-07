@@ -175,43 +175,20 @@ view filteredSortedThings =
                     ]
                 , text "items per page"
                 ]
-
-        prevButtons =
-            [ button [ onClick First, disabled <| Paginate.isFirst filteredSortedThings ] [ text "<<" ]
-            , button [ onClick Prev, disabled <| Paginate.isFirst filteredSortedThings ] [ text "<" ]
-            ]
-
-        nextButtons =
-            [ button [ onClick Next, disabled <| Paginate.isLast filteredSortedThings ] [ text ">" ]
-            , button [ onClick Last, disabled <| Paginate.isLast filteredSortedThings ] [ text ">>" ]
-            ]
-
-        pagerButtonView index isActive =
-            button
-                [ style
-                    [ ( "font-weight"
-                      , if isActive then
-                            "bold"
-                        else
-                            "normal"
-                      )
-                    ]
-                , onClick <| GoTo index
-                ]
-                [ text <| toString index ]
     in
     div [] <|
         [ displayInfoView
         , itemsPerPageSelector
         , button [ onClick Reverse ] [ text "Reverse list" ]
         , input [ placeholder "Search...", onInput Find ] []
+        , foot filteredSortedThings
         , ul [] (List.map itemView <| Paginate.page filteredSortedThings)
+        , foot filteredSortedThings
         ]
-            ++ footer filteredSortedThings
 
 
-footer : PaginatedList a -> List (Html Msg)
-footer filteredSortedThings =
+foot : PaginatedList a -> Html Msg
+foot filteredSortedThings =
     let
         prevButtons =
             [ button [ onClick First, disabled <| Paginate.isFirst filteredSortedThings ] [ text "<<" ]
@@ -237,4 +214,4 @@ footer filteredSortedThings =
                 ]
                 [ text <| toString index ]
     in
-    prevButtons ++ [ span [] <| Paginate.pager pagerButtonView filteredSortedThings ] ++ nextButtons
+    div [] (prevButtons ++ [ span [] <| Paginate.pager pagerButtonView filteredSortedThings ] ++ nextButtons)
