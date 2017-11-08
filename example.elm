@@ -3,7 +3,10 @@ module Example exposing (main)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Paginate exposing (..)
+import Paginate exposing (PaginatedList)
+
+
+--exposing (..)
 
 
 type alias Ee =
@@ -143,8 +146,8 @@ view filteredSortedThings =
                             , toString <| Paginate.length filteredSortedThings
                             , "items"
                             ]
-                    , u [ onClick <| AddItem, style [ ( "cursor", "pointer" ) ] ] [ text " (add more!)" ]
-                    , u [ onClick <| AddItem10, style [ ( "cursor", "pointer" ) ] ] [ text " (add 10 more!)" ]
+                    , u [ onClick <| AddItem, style [ ( "cursor", "pointer" ) ] ] [ text " (add more)" ]
+                    , u [ onClick <| AddItem10, style [ ( "cursor", "pointer" ) ] ] [ text " (add 10 more)" ]
                     ]
                 , text <|
                     String.join " "
