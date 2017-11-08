@@ -49,8 +49,9 @@ main =
 init : Model
 init =
     let
+        things : List String
         things =
-            List.map (toString >> (++) "item ") <| List.range 1 17
+            List.map (toString >> (++) "item ") <| List.range 1 37
     in
     { things = Paginate.fromList 10 things
     , reversed = False
@@ -85,11 +86,7 @@ update msg model =
             { model | things = Paginate.changeItemsPerPage sizeAsInt model.things }
 
         DeleteItem item ->
-            let
-                removeItem =
-                    List.filter ((/=) item)
-            in
-            { model | things = Paginate.map removeItem model.things }
+            { model | things = Paginate.map (List.filter ((/=) item)) model.things }
 
         AddItem ->
             let
