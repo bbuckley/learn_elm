@@ -6,6 +6,12 @@ import Html.Events exposing (..)
 import Paginate exposing (..)
 
 
+type alias Ee =
+    { info : String
+    , foo : Int
+    }
+
+
 type alias Model =
     { things : PaginatedList String
     , reversed : Bool
