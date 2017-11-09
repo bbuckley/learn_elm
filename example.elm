@@ -20,6 +20,7 @@ type alias Model =
     , reversed : Bool
     , query : String
     , globalId : Int
+    , ees : PaginatedList Ee
     }
 
 
@@ -57,6 +58,7 @@ init =
     , reversed = False
     , query = ""
     , globalId = List.length things
+    , ees = Paginate.fromList 2 [ Ee "test" 1, Ee "test" 2 ]
     }
 
 
