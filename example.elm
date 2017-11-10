@@ -115,7 +115,16 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    model |> filterAndSortThings |> viewp
+    -- model |> filterAndSortThings |> viewp
+    let
+        x =
+            viewp <| filterAndSortThings <| model
+    in
+    div []
+        [ div [] [ x ]
+        , br [] []
+        , div [] [ text (toString model) ]
+        ]
 
 
 filterAndSortThings : Model -> PaginatedList String
@@ -225,6 +234,8 @@ foot filteredSortedThings =
                             "normal"
                       )
                     ]
+
+                -- , onClick (GoTo index)
                 , onClick <| GoTo index
                 ]
                 [ text <| toString index ]
