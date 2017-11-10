@@ -42,8 +42,6 @@ main : Program Never Model Msg
 main =
     Html.beginnerProgram
         { model = init
-
-        -- , view = filterAndSortThings >> view
         , view = view
         , update = update
         }
@@ -117,18 +115,20 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    viewp (filterAndSortThings model)
+    model |> filterAndSortThings |> viewp
 
 
 filterAndSortThings : Model -> PaginatedList String
 filterAndSortThings model =
     let
+        sort : List String -> List String
         sort =
             if model.reversed then
                 List.reverse
             else
                 identity
 
+        filter : List String -> List String
         filter =
             if model.query == "" then
                 identity
