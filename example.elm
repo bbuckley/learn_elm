@@ -42,7 +42,9 @@ main : Program Never Model Msg
 main =
     Html.beginnerProgram
         { model = init
-        , view = filterAndSortThings >> view
+
+        -- , view = filterAndSortThings >> view
+        , view = view
         , update = update
         }
 
@@ -113,6 +115,11 @@ update msg model =
             { model | query = query }
 
 
+view : Model -> Html Msg
+view model =
+    viewp (filterAndSortThings model)
+
+
 filterAndSortThings : Model -> PaginatedList String
 filterAndSortThings model =
     let
@@ -131,8 +138,8 @@ filterAndSortThings model =
     Paginate.map (filter >> sort) model.things
 
 
-view : PaginatedList String -> Html Msg
-view filteredSortedThings =
+viewp : PaginatedList String -> Html Msg
+viewp filteredSortedThings =
     let
         displayInfoView =
             div []
