@@ -21,6 +21,8 @@ type alias Model =
     , query : String
     , globalId : Int
     , ees : PaginatedList Ee
+
+    -- , ees : List Ee
     }
 
 
@@ -30,12 +32,20 @@ type Msg
     | First
     | Last
     | GoTo Int
+    | GoToEe Int
     | ChangePageSize String
     | DeleteItem String
     | AddItem
     | Reverse
     | Find String
     | AddItem10
+    | AddEe
+    | AddEe5
+    | ChangePageSizeEe String
+    | NextEe
+    | PrevEe
+    | FirstEe
+    | LastEe
 
 
 main : Program Never Model Msg
@@ -58,7 +68,9 @@ init =
     , reversed = False
     , query = ""
     , globalId = List.length things
-    , ees = Paginate.fromList 2 [ Ee "test" 1, Ee "test" 2 ]
+    , ees = Paginate.fromList 5 [ Ee "test" 100, Ee "test" 200 ]
+
+    -- , ees = List.map identity [ Ee "test" 1, Ee "test" 2 ]
     }
 
 
@@ -68,8 +80,14 @@ update msg model =
         GoTo index ->
             { model | things = Paginate.goTo index model.things }
 
+        GoToEe indexEe ->
+            { model | ees = Paginate.goTo indexEe model.ees }
+
         Next ->
             { model | things = Paginate.next model.things }
+
+        NextEe ->
+            { model | ees = Paginate.next model.ees }
 
         Prev ->
             { model | things = Paginate.prev model.things }
@@ -80,12 +98,28 @@ update msg model =
         Last ->
             { model | things = Paginate.last model.things }
 
+        PrevEe ->
+            { model | ees = Paginate.prev model.ees }
+
+        FirstEe ->
+            { model | ees = Paginate.first model.ees }
+
+        LastEe ->
+            { model | ees = Paginate.last model.ees }
+
         ChangePageSize size ->
             let
                 sizeAsInt =
                     Result.withDefault 10 <| String.toInt size
             in
             { model | things = Paginate.changeItemsPerPage sizeAsInt model.things }
+
+        ChangePageSizeEe size ->
+            let
+                sizeAsInt =
+                    Result.withDefault 5 <| String.toInt size
+            in
+            { model | ees = Paginate.changeItemsPerPage sizeAsInt model.ees }
 
         DeleteItem item ->
             { model | things = Paginate.map (List.filter ((/=) item)) model.things }
@@ -112,6 +146,22 @@ update msg model =
         Find query ->
             { model | query = query }
 
+        AddEe ->
+            let
+                newId =
+                    model.globalId + 1
+
+                addItem existing =
+                    existing ++ [ Ee "new item " newId ]
+            in
+            { model
+                | ees = Paginate.map addItem model.ees
+                , globalId = newId
+            }
+
+        AddEe5 ->
+            List.foldr update model (List.map (\_ -> AddEe) (List.range 1 5))
+
 
 view : Model -> Html Msg
 view model =
@@ -123,8 +173,31 @@ view model =
     div []
         [ div [] [ x ]
         , br [] []
+
+        -- , ul [] (Paginate.map (\x -> li [] [ text "ee" ]) model.ees)
+        , viewpEe <| filterAndSortEes <| model
         , div [] [ text (toString model) ]
         ]
+
+
+filterAndSortEes : Model -> PaginatedList Ee
+filterAndSortEes model =
+    let
+        sort : List Ee -> List Ee
+        sort =
+            if model.reversed then
+                List.reverse
+            else
+                identity
+
+        filter : List Ee -> List Ee
+        filter =
+            if model.query == "" then
+                identity
+            else
+                List.filter (\ee -> String.contains model.query (toString ee))
+    in
+    Paginate.map (filter >> sort) model.ees
 
 
 filterAndSortThings : Model -> PaginatedList String
@@ -147,6 +220,35 @@ filterAndSortThings model =
     Paginate.map (filter >> sort) model.things
 
 
+viewpEe : PaginatedList Ee -> Html Msg
+viewpEe filteredSortedEe =
+    let
+        itemViewEe : Ee -> Html Msg
+        itemViewEe item =
+            li []
+                [ span [] [ text (toString item) ]
+                , u [ style [ ( "cursor", "pointer" ) ] ] [ text " (delete)" ]
+                ]
+
+        itemsPerPageSelectorEe =
+            div []
+                [ text "show"
+                , select [ onInput ChangePageSizeEe ]
+                    [ option [ value "5" ] [ text "5" ]
+                    , option [ value "15" ] [ text "15" ]
+                    ]
+                , text "items per page"
+                ]
+    in
+    div [] <|
+        [ itemsPerPageSelectorEe
+        , button [ onClick Reverse ] [ text "Reverse list" ]
+        , input [ placeholder "Search...", onInput Find ] []
+        , foot filteredSortedEe
+        , ul [] (List.map itemViewEe <| Paginate.page filteredSortedEe)
+        ]
+
+
 viewp : PaginatedList String -> Html Msg
 viewp filteredSortedThings =
     let
@@ -163,6 +265,8 @@ viewp filteredSortedThings =
                             ]
                     , u [ onClick <| AddItem, style [ ( "cursor", "pointer" ) ] ] [ text " (add more)" ]
                     , u [ onClick <| AddItem10, style [ ( "cursor", "pointer" ) ] ] [ text " (add 10 more)" ]
+                    , u [ onClick <| AddEe, style [ ( "cursor", "pointer" ) ] ] [ text " (add Ee)" ]
+                    , u [ onClick <| AddEe5, style [ ( "cursor", "pointer" ) ] ] [ text " (add 5 Ee)" ]
                     ]
                 , text <|
                     String.join " "
@@ -183,6 +287,7 @@ viewp filteredSortedThings =
                     ]
                 ]
 
+        itemView : String -> Html Msg
         itemView item =
             li []
                 [ span [] [ text item ]
@@ -241,3 +346,35 @@ foot filteredSortedThings =
                 [ text <| toString index ]
     in
     div [] (prevButtons ++ [ span [] <| Paginate.pager pagerButtonView filteredSortedThings ] ++ nextButtons)
+
+
+footEe : PaginatedList Ee -> Html Msg
+footEe filteredSortedEe =
+    let
+        prevButtons =
+            [ button [ onClick FirstEe, disabled <| Paginate.isFirst filteredSortedEe ] [ text "<<" ]
+            , button [ onClick PrevEe, disabled <| Paginate.isFirst filteredSortedEe ] [ text "<" ]
+            ]
+
+        nextButtons =
+            [ button [ onClick NextEe, disabled <| Paginate.isLast filteredSortedEe ] [ text ">" ]
+            , button [ onClick LastEe, disabled <| Paginate.isLast filteredSortedEe ] [ text ">>" ]
+            ]
+
+        pagerButtonView index isActive =
+            button
+                [ style
+                    [ ( "font-weight"
+                      , if isActive then
+                            "bold"
+                        else
+                            "normal"
+                      )
+                    ]
+
+                -- , onClick (GoTo index)
+                , onClick <| GoToEe index
+                ]
+                [ text <| toString index ]
+    in
+    div [] (prevButtons ++ [ span [] <| Paginate.pager pagerButtonView filteredSortedEe ] ++ nextButtons)
