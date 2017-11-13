@@ -90,13 +90,16 @@ xxx =
     fromList 2 xx
 
 
+pagerView : Model -> Html Msg
 pagerView model =
     div [] <|
         pager (\pageNum isCurrentPage -> renderPagerButton pageNum isCurrentPage) (goTo model.pageno xxx)
 
 
+view : Model -> Html Msg
 view model =
     div []
         [ pagerView model
         , p [] [ text (toString model) ]
+        , pagerView model
         ]
