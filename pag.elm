@@ -82,7 +82,7 @@ type Msg
 
 xxx : PaginatedList Int
 xxx =
-    fromList 2 xx
+    fromList 10 xx
 
 
 pagerView : Model -> Html Msg
@@ -95,6 +95,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ pagerView model
+        , p [] [ xxx |> goTo model.pageno |> page |> toString |> text ]
         , p [] [ text (toString model) ]
         , pagerView model
         ]
