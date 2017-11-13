@@ -39,11 +39,6 @@ update msg model =
             { model | pageno = pageno }
 
 
-
--- Paginate.goTo i xxx
--- text (toString pagerView)
-
-
 x : List Int
 x =
     -- equals [ 21, 22, 23, 24, 25, 26, 27, 28, 29 30 ]
