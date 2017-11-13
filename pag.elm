@@ -1,15 +1,47 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Paginate exposing (PaginatedList, fromList, goTo, page)
+import Html.Attributes exposing (style)
+import Html.Events exposing (onClick)
+import Paginate exposing (PaginatedList, fromList, goTo, next, page, pager)
 
 
 xx =
     List.range 1 100
 
 
+
+-- -- main =
+-- pagerView
+
+
+main : Program Never Model Msg
 main =
-    text (toString z)
+    Html.beginnerProgram
+        { model = initModel
+        , update = update
+        , view = view
+        }
+
+
+type alias Model =
+    { pageno : Int }
+
+
+initModel =
+    { pageno = 5 }
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        GoTo pageno ->
+            { model | pageno = pageno }
+
+
+
+-- Paginate.goTo i xxx
+-- text (toString pagerView)
 
 
 x : List Int
@@ -25,3 +57,46 @@ y =
 
 z =
     fromList 10 <| xx
+
+
+a =
+    fromList 2 xx
+        |> next
+        |> pager (,)
+
+
+renderPagerButton : Int -> Bool -> Html Msg
+renderPagerButton index isActive =
+    button
+        [ style
+            [ ( "font-weight"
+              , if isActive then
+                    "bold"
+                else
+                    "normal"
+              )
+            ]
+        , onClick <| GoTo index
+        ]
+        [ text <| toString index ]
+
+
+type Msg
+    = GoTo Int
+
+
+xxx : PaginatedList Int
+xxx =
+    fromList 2 xx
+
+
+pagerView model =
+    div [] <|
+        pager (\pageNum isCurrentPage -> renderPagerButton pageNum isCurrentPage) (goTo model.pageno xxx)
+
+
+view model =
+    div []
+        [ pagerView model
+        , p [] [ text (toString model) ]
+        ]
