@@ -96,6 +96,6 @@ view model =
     div []
         [ pagerView model
         , p [] [ xxx |> goTo model.pageno |> page |> toString |> text ]
-        , p [] [ text (toString model) ]
-        , pagerView model
+        , p [] [ model |> toString |> text ]
+        , model |> pagerView
         ]
