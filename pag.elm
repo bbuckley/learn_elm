@@ -88,7 +88,7 @@ xxx =
 pagerView : Model -> Html Msg
 pagerView model =
     div [] <|
-        pager (\pageNum isCurrentPage -> renderPagerButton pageNum isCurrentPage) (goTo model.pageno xxx)
+        pager (\pageNo isCurPg -> renderPagerButton pageNo isCurPg) (goTo model.pageno xxx)
 
 
 view : Model -> Html Msg
