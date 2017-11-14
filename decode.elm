@@ -6,7 +6,7 @@ import Json.Decode.Pipeline exposing (decode, hardcoded, optional, required)
 
 
 main =
-    xxxxxxx |> toString |> text
+    listTc tcs |> toString |> text
 
 
 a =
@@ -97,3 +97,13 @@ tcs =
 
 xxxxxxx =
     decodeString (list tcDecoder) tcs
+
+
+listTc : String -> List Tc
+listTc tcs =
+    case decodeString (list tcDecoder) tcs of
+        Err err ->
+            []
+
+        Ok v ->
+            v
