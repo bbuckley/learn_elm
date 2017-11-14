@@ -85,21 +85,15 @@ tcDecoder =
         |> required "ric" string
 
 
-tc1 =
-    """{ "id": "123", "dob": "","doe": "","crd": "11","stat": "11","ric": "11" }"""
-
-
-tc2 =
-    """{ "id": "124", "dob": "","doe": "","crd": "11","stat": "11","ric": "11" }"""
-
-
-tc3 =
-    """{ "id": "125", "dob": "","doe": "","crd": "11","stat": "11","ric": "11" }"""
-
-
 xxxxxx =
     decodeString tcDecoder """{ "id": "123", "dob": "","doe": "","crd": "11","stat": "11","ric": "11" }"""
 
 
+tcs =
+    """[{ "id": "1", "dob": "","doe": "","crd": "11","stat": "11","ric": "11" },
+    { "id": "2", "dob": "","doe": "","crd": "11","stat": "11","ric": "11" },
+    { "id": "3", "dob": "","doe": "","crd": "11","stat": "11","ric": "11" }]"""
+
+
 xxxxxxx =
-    decodeString (list tcDecoder) """[{ "id": "123", "dob": "","doe": "","crd": "11","stat": "11","ric": "11" },{ "id": "123", "dob": "","doe": "","crd": "11","stat": "11","ric": "11" }]"""
+    decodeString (list tcDecoder) tcs
