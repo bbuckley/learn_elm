@@ -2,10 +2,11 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Json.Decode exposing (bool, decodeString, field, int, list)
+import Json.Decode.Pipeline exposing (decode, hardcoded, optional, required)
 
 
 main =
-    xxxx |> toString |> text
+    xxxxx |> toString |> text
 
 
 a =
@@ -45,3 +46,17 @@ xxx =
 xxxx : Result String Int
 xxxx =
     decodeString xxx """{ "x": 3, "y": 4 }"""
+
+
+type alias Point =
+    { x : Int, y : Int }
+
+
+pointDecoder : Json.Decode.Decoder Point
+pointDecoder =
+    decode Point |> required "x" int |> required "y" int
+
+
+xxxxx : Result String Point
+xxxxx =
+    decodeString pointDecoder """{ "x": 3, "y": 4 }"""
