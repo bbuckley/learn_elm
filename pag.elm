@@ -73,7 +73,8 @@ renderPagerButton index isActive =
             ]
         , onClick <| GoTo index
         ]
-        [ text <| toString index ]
+        -- [ text <| toString index ]
+        [ text ("TC" ++ toString index) ]
 
 
 type Msg
@@ -82,7 +83,7 @@ type Msg
 
 xxx : PaginatedList Int
 xxx =
-    fromList 10 xx
+    fromList 1 xx
 
 
 pagerView : Model -> Html Msg
