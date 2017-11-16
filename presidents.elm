@@ -1,4 +1,4 @@
-module Main exposing (..)
+module Presidents exposing (presidents)
 
 import Html exposing (Html, div, h1, input, text)
 import Html.Attributes exposing (placeholder)
