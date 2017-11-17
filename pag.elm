@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import Paginate exposing (PaginatedList, fromList, goTo, next, page, pager)
+import Presidents exposing (presidents)
 
 
 xx =
@@ -98,5 +99,6 @@ view model =
         [ pagerView model
         , p [] [ xxx |> goTo model.pageno |> page |> toString |> text ]
         , p [] [ model |> toString |> text ]
+        , p [] [ List.head presidents |> toString |> text ]
         , model |> pagerView
         ]
