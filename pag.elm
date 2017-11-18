@@ -99,6 +99,6 @@ view model =
         [ pagerView model
         , p [] [ xxx |> goTo model.pageno |> page |> toString |> text ]
         , p [] [ model |> toString |> text ]
-        , p [] [ List.head presidents |> toString |> text ]
+        , p [] [ (List.head presidents |> toString) ++ " blah" |> text ]
         , model |> pagerView
         ]
