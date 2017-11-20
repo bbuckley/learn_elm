@@ -90,15 +90,15 @@ type Msg
     | SetQuery String
 
 
+xxx : PaginatedList Person
+xxx =
+    fromList 5 presidents
 
--- xxx : PaginatedList Person
--- xxx =
---     fromList 5 presidents
 
 
-filteredModel : Model -> PaginatedList
-filteredModel model =
-    PaginatedList.filter (String.contains model.query << String.toLower << .name) model.list
+-- filteredModel : Model -> PaginatedList
+-- filteredModel model =
+--     PaginatedList.filter (String.contains model.query << String.toLower << .name) model.list
 
 
 filteredModel1 : Model -> List Person -> List Person
@@ -130,11 +130,9 @@ view : Model -> Html Msg
 view model =
     div []
         [ pagerView model
-
-        -- , p [] [ xxx |> goTo model.pageno |> page |> toString |> text ]
-        , ul [] (items model)
-
-        -- , p [] [ model |> toString |> text ]
+        , p [] [ xxx |> goTo model.pageno |> page |> toString |> text ]
+        , p [] [ model |> toString |> text ]
+        , p [] [ (List.head presidents |> toString) ++ " blah" |> text ]
         , model |> pagerView
         , input [ placeholder "Search by Name", onInput SetQuery ] []
         ]
