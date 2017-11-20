@@ -1,10 +1,10 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (style)
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (placeholder, style)
+import Html.Events exposing (onClick, onInput)
 import Paginate exposing (PaginatedList, fromList, goTo, next, page, pager)
-import Presidents exposing (presidents)
+import Presidents exposing (Person, presidents)
 
 
 xx =
@@ -26,11 +26,15 @@ main =
 
 
 type alias Model =
-    { pageno : Int }
+    { pageno : Int
+    , query : String
+    , list : PaginatedList Person
+    }
 
 
+initModel : Model
 initModel =
-    { pageno = 5 }
+    { pageno = 5, query = "", list = fromList 5 presidents }
 
 
 update : Msg -> Model -> Model
@@ -38,6 +42,9 @@ update msg model =
     case msg of
         GoTo pageno ->
             { model | pageno = pageno }
+
+        SetQuery query ->
+            { model | query = query }
 
 
 x : List Int
@@ -75,30 +82,59 @@ renderPagerButton index isActive =
         , onClick <| GoTo index
         ]
         -- [ text <| toString index ]
-        [ text ("TC" ++ toString index) ]
+        [ text (toString index) ]
 
 
 type Msg
     = GoTo Int
+    | SetQuery String
 
 
-xxx : PaginatedList Int
-xxx =
-    fromList 1 xx
+
+-- xxx : PaginatedList Person
+-- xxx =
+--     fromList 5 presidents
+
+
+filteredModel : Model -> PaginatedList
+filteredModel model =
+    PaginatedList.filter (String.contains model.query << String.toLower << .name) model.list
+
+
+filteredModel1 : Model -> List Person -> List Person
+filteredModel1 model person =
+    List.filter (String.contains model.query << String.toLower << .name) person
+
+
+pp : Model -> List Person
+pp model =
+    model.list |> goTo model.pageno |> page
+
+
+items : Model -> List (Html msg)
+items model =
+    List.map (\x -> li [] [ text (toString x) ]) (pp model)
+
+
+
+--xx
 
 
 pagerView : Model -> Html Msg
 pagerView model =
     div [] <|
-        pager (\pageNo isCurPg -> renderPagerButton pageNo isCurPg) (goTo model.pageno xxx)
+        pager (\pageNo isCurPg -> renderPagerButton pageNo isCurPg) (goTo model.pageno model.list)
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ pagerView model
-        , p [] [ xxx |> goTo model.pageno |> page |> toString |> text ]
-        , p [] [ model |> toString |> text ]
-        , p [] [ List.head presidents |> toString |> text ]
+
+        -- , p [] [ xxx |> goTo model.pageno |> page |> toString |> text ]
+        , ul [] (items model)
+
+        -- , p [] [ model |> toString |> text ]
         , model |> pagerView
+        , input [ placeholder "Search by Name", onInput SetQuery ] []
         ]
