@@ -23,8 +23,18 @@ double x =
     2 * x
 
 
+add7 : Int -> Int
+add7 =
+    (+) 7
+
+
+add4 : Int -> Int
+add4 x =
+    x + 4
+
+
 main : Html msg
 main =
-    applyThrice double 5
+    applyThrice add4 5
         |> toString
         |> text
