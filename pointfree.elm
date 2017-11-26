@@ -12,7 +12,14 @@ main : Html msg
 main =
     -- select 2 x |> toString |> text
     -- lessthan4 x |> toString |> text
-    x |> lessthan4 |> isEven |> toString |> text
+    x
+        |> lessthan4
+        |> isEven
+        |> List.map (\x -> x + 10)
+        |> List.map (\x -> x * 10)
+        |> List.filter (\x -> x % 40 /= 0)
+        |> toString
+        |> text
 
 
 select : Int -> List Int -> List Int
