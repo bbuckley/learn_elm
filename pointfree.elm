@@ -17,7 +17,7 @@ main =
         |> isEven
         |> List.map (\x -> x + 10)
         |> List.map (\x -> x * 10)
-        -- |> List.filter (\x -> x % 40 /= 0)
+        |> List.filter (\x -> x % 40 /= 0)
         |> List.map (\x -> ( x, True ))
         |> toString
         |> text
