@@ -1,8 +1,9 @@
 module Combobox2 exposing (..)
 
+import Dict exposing (Dict, get)
 import Html exposing (Html, input, label, text)
-import Html.Attributes as Attributes exposing (checked, style, type_)
-import Html.Events exposing (onClick)
+import Html.Attributes as Attributes exposing (checked, placeholder, style, type_, value)
+import Html.Events exposing (onClick, onInput)
 import Kintail.InputWidget as K
 import Set exposing (Set, member)
 
@@ -111,6 +112,7 @@ type alias Model =
     , selectedRics : Set String
     , hasLoa : Bool
     , mStat : Maybe Stat
+    , info : Dict String (Maybe String)
     }
 
 
@@ -127,6 +129,7 @@ type Msg
     | Deselect String
     | ChangeLoa
     | NewMStat (Maybe Stat)
+    | EditPlayerInformation String String
 
 
 update : Msg -> Model -> Model
@@ -167,6 +170,20 @@ update msg model =
 
         ChangeLoa ->
             { model | hasLoa = not model.hasLoa }
+
+        EditPlayerInformation section val ->
+            let
+                newPlayerInfo =
+                    Dict.insert
+                        section
+                        (if String.length val > 0 then
+                            Just val
+                         else
+                            Nothing
+                        )
+                        model.info
+            in
+            { model | info = newPlayerInfo }
 
 
 toStringFooBar : FooBar -> String
@@ -286,8 +303,69 @@ view model =
         , viewRics2 model
         , checkbox "LOA" model.hasLoa ChangeLoa
         , Html.br [] []
+        , Html.div []
+            [ input
+                [ placeholder "Player"
+                , onInput (EditPlayerInformation "Player")
+                , value (fromDict "Player" model.info)
+                ]
+                []
+            , input
+                [ placeholder "Dob"
+                , onInput (EditPlayerInformation "Dob")
+                , value (fromDict "Dob" model.info)
+                ]
+                []
+            , input
+                [ placeholder "Doe"
+                , onInput (EditPlayerInformation "Doe")
+                , value (fromDict "Doe" model.info)
+                ]
+                []
+            , input
+                [ placeholder "Dot"
+                , onInput (EditPlayerInformation "Dot")
+                , value (fromDict "Dot" model.info)
+                ]
+                []
+            , input
+                [ placeholder "crd"
+                , onInput (EditPlayerInformation "crd")
+                ]
+                []
+            , inputt "Player" model
+            , inputt "Player" model
+            , inputt "CalcDate" model
+            , inputt "crd" model
+            , inputt "CalcDate" model
+            ]
         , Html.text (toString model)
         ]
+
+
+inputt : String -> Model -> Html Msg
+inputt k model =
+    input
+        [ placeholder k
+        , onInput (EditPlayerInformation k)
+        , value (fromDict k model.info)
+        ]
+        []
+
+
+fromDict : String -> Dict String (Maybe String) -> String
+fromDict k dict =
+    case Dict.get k dict of
+        Nothing ->
+            ""
+
+        Just x ->
+            case x of
+                Nothing ->
+                    ""
+
+                Just x ->
+                    x
 
 
 initModel : Model
@@ -304,6 +382,7 @@ initModel =
     , selectedRics = Set.empty
     , hasLoa = False
     , mStat = Nothing
+    , info = Dict.fromList [ ( "Dob", Just "7777777" ), ( "Doe", Just "888899999" ) ]
     }
 
 

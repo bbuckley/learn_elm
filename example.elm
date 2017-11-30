@@ -1,5 +1,6 @@
 module Example exposing (main)
 
+import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -12,6 +13,7 @@ import Paginate exposing (PaginatedList)
 type alias Ee =
     { info : String
     , foo : Int
+    , info : Dict String String
     }
 
 
@@ -68,7 +70,7 @@ init =
     , reversed = False
     , query = ""
     , globalId = List.length things
-    , ees = Paginate.fromList 5 [ Ee "test" 100, Ee "test" 200 ]
+    , ees = Paginate.fromList 5 [ Ee "test" 100 Dict.empty, Ee "test" 200 Dict.empty ]
 
     -- , ees = List.map identity [ Ee "test" 1, Ee "test" 2 ]
     }
@@ -152,7 +154,7 @@ update msg model =
                     model.globalId + 1
 
                 addItem existing =
-                    existing ++ [ Ee "new item " newId ]
+                    existing ++ [ Ee "new item " newId Dict.empty ]
             in
             { model
                 | ees = Paginate.map addItem model.ees
