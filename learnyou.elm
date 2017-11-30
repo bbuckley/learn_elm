@@ -33,7 +33,7 @@ add4 x =
     x + 4
 
 
-main : Html msg
+main : Html a
 main =
     applyThrice add4 5
         |> toString
