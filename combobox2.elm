@@ -304,47 +304,60 @@ view model =
         , checkbox "LOA" model.hasLoa ChangeLoa
         , Html.br [] []
         , Html.div []
-            [ input
-                [ placeholder "Player"
-                , onInput (EditPlayerInformation "Player")
-                , value (fromDict "Player" model.info)
-                ]
-                []
-            , input
-                [ placeholder "Dob"
-                , onInput (EditPlayerInformation "Dob")
-                , value (fromDict "Dob" model.info)
-                ]
-                []
-            , input
-                [ placeholder "Doe"
-                , onInput (EditPlayerInformation "Doe")
-                , value (fromDict "Doe" model.info)
-                ]
-                []
-            , input
-                [ placeholder "Dot"
-                , onInput (EditPlayerInformation "Dot")
-                , value (fromDict "Dot" model.info)
-                ]
-                []
-            , input
-                [ placeholder "crd"
-                , onInput (EditPlayerInformation "crd")
-                ]
-                []
-            , inputt "Player" model
-            , inputt "Player" model
-            , inputt "CalcDate" model
-            , inputt "crd" model
-            , inputt "CalcDate" model
-            ]
+            (List.map
+                (\k ->
+                    element k model
+                )
+                fields
+            )
+
+        --     [ input
+        --         [ placeholder "Player"
+        --         , onInput (EditPlayerInformation "Player")
+        --         , value (fromDict "Player" model.info)
+        --         ]
+        --         []
+        --     , input
+        --         [ placeholder "Dob"
+        --         , onInput (EditPlayerInformation "Dob")
+        --         , value (fromDict "Dob" model.info)
+        --         ]
+        --         []
+        --     , input
+        --         [ placeholder "Doe"
+        --         , onInput (EditPlayerInformation "Doe")
+        --         , value (fromDict "Doe" model.info)
+        --         ]
+        --         []
+        --     , input
+        --         [ placeholder "Dot"
+        --         , onInput (EditPlayerInformation "Dot")
+        --         , value (fromDict "Dot" model.info)
+        --         ]
+        --         []
+        --     , input
+        --         [ placeholder "crd"
+        --         , onInput (EditPlayerInformation "crd")
+        --         ]
+        --         []
+        --     , inputt "Player" model
+        --     , inputt "Player" model
+        --     , inputt "CalcDate" model
+        --     , inputt "crd" model
+        --     , inputt "CalcDate" model
+        --     ]
+        -- -- :: List.map (\k -> inputt k model) fields
         , Html.text (toString model)
         ]
 
 
-inputt : String -> Model -> Html Msg
-inputt k model =
+fields : List String
+fields =
+    [ "Player", "Crd", "Bcd", "Doe", "Dob", "Dot", "Foo" ]
+
+
+element : String -> Model -> Html Msg
+element k model =
     input
         [ placeholder k
         , onInput (EditPlayerInformation k)
