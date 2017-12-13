@@ -93,11 +93,18 @@ ids =
 --   |
 
 
+x =
+    List.map (\x -> li [] [ text <| toString x ])
+
+
 main : Html msg
 main =
     div []
         [ ul [] (List.map (\x -> li [] [ text (toString x) ]) a)
         , ul [] (List.map (\x -> li [] [ text (toString x) ]) b)
         , ul [] (List.map (\x -> li [] [ text (toString x) ]) ids)
+        , ul [] (List.map (\x -> li [] [ text <| toString x ]) ids)
+        , ul [] ([ 6, 8, 9 ] |> List.map (\x -> li [] [ text <| toString x ]))
+        , ul [] (ids |> x)
         , Html.p [] [ text (toString ids) ]
         ]

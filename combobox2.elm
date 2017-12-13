@@ -1,5 +1,6 @@
 module Combobox2 exposing (..)
 
+import Date exposing (Date, day, month, year)
 import Dict exposing (Dict, get)
 import Html exposing (Html, input, label, text)
 import Html.Attributes as Attributes exposing (checked, placeholder, style, type_, value)
@@ -113,6 +114,8 @@ type alias Model =
     , hasLoa : Bool
     , mStat : Maybe Stat
     , info : Dict String (Maybe String)
+
+    -- , info : Dict String String
     }
 
 
@@ -275,8 +278,9 @@ checkbox string bool msg =
     label [] [ input [ type_ "checkbox", checked bool, onClick msg ] [], text string ]
 
 
-
---
+dateToS : Date -> String
+dateToS d =
+    "(" ++ toString (month d) ++ " " ++ toString (day d) ++ ", " ++ toString (year d) ++ ")"
 
 
 view : Model -> Html Msg
@@ -307,6 +311,38 @@ view model =
             (List.map
                 (\k ->
                     element k model
+                )
+                fields
+            )
+        , Html.div []
+            (List.map
+                (\k ->
+                    let
+                        kk =
+                            Dict.get k model.info
+
+                        kkk =
+                            case kk of
+                                Nothing ->
+                                    ""
+
+                                Just v ->
+                                    case v of
+                                        Nothing ->
+                                            ""
+
+                                        Just vv ->
+                                            vv
+
+                        d =
+                            Date.fromString kkk
+                    in
+                    case d of
+                        Ok v ->
+                            text <| dateToS v
+
+                        Err str ->
+                            text str
                 )
                 fields
             )
@@ -353,7 +389,7 @@ view model =
 
 fields : List String
 fields =
-    [ "Player", "Crd", "Bcd", "Doe", "Dob", "Dot", "Foo" ]
+    [ "Player", "Crd", "Bcd", "Doe", "Dob", "Dot", "Foo", "Dot", "Crd" ]
 
 
 element : String -> Model -> Html Msg
