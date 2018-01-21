@@ -41,7 +41,8 @@ intersectAll lists =
             []
 
         first :: rest ->
-            List.foldl (\list acc -> Set.intersect (Set.fromList list) acc) (Set.fromList first) rest
+            --List.foldl (\list acc -> Set.intersect (Set.fromList list) acc) (Set.fromList first) rest
+            List.foldl (\a b -> Set.intersect (Set.fromList a) b) (Set.fromList first) rest
                 |> Set.toList
 
 
