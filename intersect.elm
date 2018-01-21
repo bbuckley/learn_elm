@@ -6,12 +6,7 @@ import Set exposing (Set)
 
 ll : List (List Int)
 ll =
-    [ [ 1, 3, 2 ], [ 2, 3, 4, 1 ], [ 2, 22, 33, 1, 7 ] ]
-
-
-
--- ll =
---     [ [ 1, 3, 2 ] ]
+    [ [ 11, 1, 3, 2 ], [ 11, 2, 3, 4, 1 ], [ 11, 2, 22, 33, 1, 7 ] ]
 
 
 intersectAll5 : List (List comparable) -> List comparable
