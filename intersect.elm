@@ -41,18 +41,18 @@ intersectAll lists =
             []
 
         first :: rest ->
-            --List.foldl (\list acc -> Set.intersect (Set.fromList list) acc) (Set.fromList first) rest
-            List.foldl (\a b -> Set.intersect (Set.fromList a) b) (Set.fromList first) rest
+            let
+                fromList : List comparable -> Set comparable
+                fromList list =
+                    Set.fromList list
+            in
+            List.foldl
+                (\list acc -> Set.intersect (fromList list) acc)
+                (fromList first)
+                rest
                 |> Set.toList
 
 
 main : Html msg
 main =
-    --text (toString (intersectAll ll))
     ll |> intersectAll |> toString |> text
-
-
-
---text (toString ([ [ 1, 6, 6 ], [ 6, 7 ], [ 1 ] ] |> List.concat |> Set.fromList |> Set.toList))
---ll |> List.concat |> Set.fromList |> Set.toList |> toString |> text
--- text (toString ll)
