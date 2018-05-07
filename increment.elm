@@ -4,9 +4,39 @@
 
 module Main exposing (..)
 
+--import Style.Color as Color
+
+import Color exposing (black, blue, darkGrey, green, red, white)
 import Html exposing (Html, a, beginnerProgram, button, div, input, p, span, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
+import Style
+import Style.Border as Border
+import Style.Color as Color
+
+
+type MyStyles
+    = None
+    | GreenBorder
+    | Pointer
+
+
+stylesheet =
+    Style.styleSheet
+        [ Style.style None
+            [ Border.all 1
+            , Border.dotted
+            , Color.border black
+            ]
+        , Style.style Pointer
+            [ Style.cursor "pointer"
+            ]
+        , Style.style GreenBorder
+            [ Border.all 1
+            , Border.dotted
+            , Color.border green
+            ]
+        ]
 
 
 main =
