@@ -8,9 +8,6 @@ import List.Extra exposing (updateIf)
 import Selected exposing (..)
 
 
-
-
-
 type alias Id =
     String
 
@@ -185,6 +182,7 @@ toStringBennyInfo bennyInfo =
 point : Id -> BennyInfo -> List (Attribute Msg)
 point id bi =
     [ style "cursor" "pointer", onClick (FooMsg id bi) ]
+
 
 
 -- attrs : Attribute Msg -> List (Attribute Msg)
