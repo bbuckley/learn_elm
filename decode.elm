@@ -99,6 +99,51 @@ xxxxxxx =
     decodeString (list tcDecoder) tcs
 
 
+type Foo
+    = -- = List Tc
+      Foo
+    | Bar String
+
+
+
+-- barDecoder : Json.Decode.Decoder (Bar { bar : String })
+-- barDecoder =
+--     decode Bar
+--         |> required "bar" string
+-- fooDecoder : Json.Decode.Decoder Foo
+-- fooDecoder =
+--     decode Foo
+--         |> required "x" int
+--         |> required "y" int
+
+
+fooDecoder : Json.Decode.Decoder Foo
+fooDecoder =
+    Json.Decode.string
+        |> Json.Decode.andThen
+            (\str ->
+                case str of
+                    "foo" ->
+                        Json.Decode.succeed Foo
+
+                    "bar" ->
+                        Json.Decode.succeed Foo
+
+                    somethingElse ->
+                        Json.Decode.fail <| "Unknown foo: " ++ somethingElse
+            )
+
+
+
+-- listFoo : String -> Maybe Foo
+-- listFoo foo =
+--     case decodeString (list tcDecoder) tcs of
+--         Err err ->
+--             []
+--         Ok v ->
+--             v
+
+
 listTc : String -> List Tc
 listTc tcs =
     case decodeString (list tcDecoder) tcs of

@@ -10,7 +10,7 @@ x =
 
 y : List (Maybe Int)
 y =
-    List.filter (\x -> x == Just 30) x
+    List.filter (\xx -> xx == Just 30) x
 
 
 toZero : Maybe Int -> Int
@@ -19,8 +19,8 @@ toZero i =
         Nothing ->
             0
 
-        Just x ->
-            x
+        Just xxx ->
+            xxx
 
 
 ztrans : List (Maybe Int) -> List Int
@@ -36,8 +36,8 @@ ztrans2 list =
                 Nothing ->
                     0
 
-                Just x ->
-                    x
+                Just xxxx ->
+                    xxxx
         )
         list
 
@@ -51,8 +51,8 @@ zlength list =
         1 ->
             "It is one"
 
-        x ->
-            toString x
+        ffff ->
+            String.fromInt ffff
 
 
 ageLabel : List Int -> String
@@ -71,8 +71,8 @@ ageLabel list =
 
         -- 2 ->
         --     [ toString (list.head - 1) ++ " - ", toString list.tail ++ " + " ]
-        x ->
-            toString x
+        other ->
+            other
 
 
 main : Html msg

@@ -10,4 +10,4 @@ x =
 
 main : Html msg
 main =
-    text ("test " ++ toString x)
+    text ("test " ++ String.fromInt x)

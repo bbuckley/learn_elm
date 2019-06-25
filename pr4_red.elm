@@ -12,7 +12,7 @@ countElements xs =
 main : Html a
 main =
     let
-        x =
+        xx =
             case test of
                 0 ->
                     "Your implementation passed all tests."
@@ -21,9 +21,9 @@ main =
                     "Your implementation failed one test."
 
                 x ->
-                    "Your implementation failed " ++ toString x ++ " tests."
+                    "Your implementation failed " ++ String.fromInt x ++ " tests."
     in
-    h3 [ style [ ( "color", color test ) ] ] [ text x ]
+    h3 [ style [ ( "color", color test ) ] ] [ text xx ]
 
 
 color : Int -> String

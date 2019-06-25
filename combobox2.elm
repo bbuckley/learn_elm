@@ -307,13 +307,7 @@ view model =
         , viewRics2 model
         , checkbox "LOA" model.hasLoa ChangeLoa
         , Html.br [] []
-        , Html.div []
-            (List.map
-                (\k ->
-                    element k model
-                )
-                fields
-            )
+        , Html.div [] (List.map (\k -> element k model) fields)
         , Html.div []
             (List.map
                 (\k ->

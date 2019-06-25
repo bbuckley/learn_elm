@@ -212,7 +212,7 @@ pageWrapper model =
         , paddingTop 5
         , Element.Attributes.paddingBottom 20
         ]
-        [ pageArea model ]
+        [ pageArea model, pageArea model ]
 
 
 pageArea : Model -> Element MyStyles variation Msg
@@ -227,23 +227,37 @@ pageArea model =
             [ bb Reset "reset!"
             , bb Set100 "Set 100"
             , bb Add5 "Add 5"
-
-            -- , Element.Input.text
-            --     None
-            --     []
-            --     Element.Input.Text
-            --     { onChange = SetInc
-            --     , value = model.incString
-            --     , label =
-            --         Element.Input.placeholder
-            --             { label = Element.Input.labelLeft (Element.el None [] empty)
-            --             , text = Element.Input.Text "Placeholder!"
-            --             }
-            --     , options = []
-            --     }
+            , Element.Input.text None
+                []
+                { onChange = SetInc
+                , value = model.incString
+                , label =
+                    Element.Input.placeholder
+                        { label = labelLeft (el None [] (Element.text "Yup"))
+                        , text = "Placeholder!"
+                        }
+                , options = []
+                }
             ]
+        , inputb "foo" "bar" SetInc
+        , inputb "foo" "bar" SetInc
         , footerArea model
         ]
+
+
+inputb : String -> String -> (String -> Msg) -> Element MyStyles variation Msg
+inputb label txt action =
+    Element.Input.text None
+        []
+        { onChange = action
+        , value = model.incString
+        , label =
+            Element.Input.placeholder
+                { label = labelLeft (el None [] (Element.text label))
+                , text = txt
+                }
+        , options = []
+        }
 
 
 footerArea : Model -> Element MyStyles variation Msg

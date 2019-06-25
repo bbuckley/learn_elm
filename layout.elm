@@ -207,6 +207,44 @@ type Msg
     | ShowXs
 
 
+type Filterx
+    = A2 Bool
+    | B3 Bool
+
+
+ffff : Filterx -> List { fil : Int, iiii : List Int } -> Int -> List { fil : Int, iiii : List Int }
+ffff fillerx lis id =
+    case fillerx of
+        A2 True ->
+            List.filter (\x -> id /= x.fil) lis
+
+        A2 False ->
+            lis
+
+        B3 _ ->
+            lis
+
+
+fff : Filterx -> List Int -> Int -> List Int
+fff fillerx lis id =
+    case fillerx of
+        A2 True ->
+            List.filter (\x -> id /= x) lis
+
+        _ ->
+            lis
+
+
+
+--B3 False ->
+--     lis
+
+
+filters1 : List Filterx
+filters1 =
+    [ A2 True, B3 False ]
+
+
 view : Model -> Html Msg
 view model =
     layout stylesheet <| pageWrapper model

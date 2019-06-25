@@ -19,7 +19,7 @@ main =
                 "Your implementation failed one test."
 
             x ->
-                "Your implementation failed " ++ toString x ++ " tests."
+                "Your implementation failed " ++ String.fromInt x ++ " tests."
 
 
 test : Int
