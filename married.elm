@@ -346,7 +346,9 @@ toLi str =
 
 type alias Model =
     { data : List Tc
-    , editing : { id : Maybe Id, field : Maybe String }
+
+    -- , editing : { id : Maybe Id, field : Maybe String }
+    , editing : { id : Maybe Id }
     , idGen : IdGenerator
     , filterOn : Bool
     , individualFilterOn : List Id
@@ -356,7 +358,9 @@ type alias Model =
 initModel =
     { data =
         list1
-    , editing = { id = Nothing, field = Nothing }
+
+    -- , editing = { id = Nothing, field = Nothing }
+    , editing = { id = Nothing }
     , idGen = initIdGen
     , filterOn = True
     , individualFilterOn = []
@@ -771,10 +775,15 @@ update msg model =
             { model | data = data |> updateIf (\a -> a.id == i) flipBenny }
 
         MouseEnter i ->
-            { model | editing = { id = Just i, field = Nothing } }
+            -- { model | editing = { id = Just i, field = Nothing } }
+            let
+                x =
+                    Debug.toString i
+            in
+            { model | editing = { id = Just i } }
 
         MouseLeave ->
-            { model | editing = { id = Nothing, field = Nothing } }
+            { model | editing = { id = Nothing } }
 
         ChangeSdob i date ->
             let
