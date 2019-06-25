@@ -947,3 +947,6 @@ checkboxi msg name i model =
         [ input [ type_ "checkbox", checked (not (List.any (\id -> id == i) model.individualFilterOn)), onClick msg ] []
         , text name
         ]
+
+
+
