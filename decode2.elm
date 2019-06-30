@@ -107,11 +107,10 @@ userDecoder =
         |> required "clients" (Decode.list clientDecoder)
 
 
-
 result : Result Decode.Error User
 result =
-    Decode.decodeString userDecoder 
- """
+    Decode.decodeString userDecoder
+        """
  {
 "id": 123, 
 "email": "sam@example.com", "name": "Sam", 
