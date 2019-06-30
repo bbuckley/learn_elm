@@ -1,9 +1,10 @@
-module Married exposing (Ben, BennyInfo(..), CalcType(..), Data, Date, Id, IdGenerator, Model, Msg(..), Sex(..), Spousal(..), Stat(..), Status(..), Tc, benDef, black, calcAge, calcTypeDomain, calcTypeMap, checkbox, checkboxg, checkboxi, colortc, dataDef, flipBenny, flipSex, hasId, initIdGen, initModel, insertAfter, isDate, liDate, liStat, lii, list1, main, new, newOne, nextId, point, pointer, pointerMsg, red, reformatDate, sexMap, spouseDomain, statDomain, statusDomain, statusMap, tc1, testBracket, toHtmlBennyInfo, toHtmlTc, toLi, toLis, toS, toString, toStringBennyInfo, toStringTc, typeMapToString, update, updateCalcType, updateDob, updateField, updateSpousal, updateStat, updateStatus, updateTc, view, year)
+module Married exposing (Ben, BennyInfo(..), CalcType(..), Data, Date, Id, IdGenerator, Model, Msg(..), Sex(..), Spousal(..), Stat(..), Status(..), Tc, benDef, black, calcAge, calcTypeDomain, calcTypeMap, checkboxg, checkboxi, colortc, dataDef, decoderSpousal, flipBenny, flipSex, hasId, initIdGen, initModel, insertAfter, isDate, json, liDate, liStat, lii, list1, main, new, newOne, nextId, point, pointer, pointerMsg, r, red, reformatDate, sexMap, spousalFromString, spouseDomain, statDomain, statusDomain, statusMap, tc1, testBracket, toHtmlBennyInfo, toHtmlTc, toLi, toLis, toS, toString, toStringBennyInfo, toStringModel, toStringTc, typeMapToString, update, updateCalcType, updateDob, updateField, updateSpousal, updateStat, updateStatus, updateTc, view, year)
 
 import Browser exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (checked, placeholder, style, type_, value)
 import Html.Events exposing (onClick, onDoubleClick, onInput, onMouseEnter, onMouseLeave)
+import Json.Decode exposing (Decoder, Error, andThen, decodeString)
 import List.Extra exposing (updateIf)
 import Selected exposing (..)
 
@@ -22,7 +23,6 @@ type Status
     | T
     | L
     | D
-    | X
 
 
 statusMap : List ( String, Status )
@@ -113,6 +113,86 @@ typeMapToString pairs key =
         |> Maybe.withDefault "String not supplied in list"
 
 
+json : String
+json =
+    "Spouse"
+
+
+decoderSpousal : Decoder Spousal
+decoderSpousal =
+    Json.Decode.string |> Json.Decode.andThen spousalFromString
+
+
+spousalFromString : String -> Decoder Spousal
+spousalFromString string =
+    case string of
+        "Spouse" ->
+            Json.Decode.succeed Spouse
+
+        "NonSpouse" ->
+            Json.Decode.succeed NonSpouse
+
+        _ ->
+            Json.Decode.fail ("Invalid Spouse: " ++ string)
+
+
+
+-- decodeSpousal : Decoder Spousal -> String -> Result Error Spousal
+-- decodeSpousal =
+--     oneOf [decodeMale, decodeFemale]
+
+
+r : Result Error Spousal
+r =
+    -- Json.Decode.decodeString decoderSpousal json
+    Json.Decode.decodeString decoderSpousal json
+
+
+toStringModel : String
+toStringModel =
+    case r of
+        Ok _ ->
+            "Ok"
+
+        Err e ->
+            "Error"
+
+
+
+-- decodeSex : Json.Decode.Decoder Sex
+-- decodeSex =
+--     let
+--         decodeToType string =
+--             case string of
+--                 "Male" -> Result.Ok Male
+--                 "Female" -> Result.Ok Female
+--                 _ -> Result.Err ("Not valid pattern for decoder to Sex. Pattern: " ++ string)
+--     in
+--     Json.Decode.decodeValue Json.Decode.string decodeToType
+
+
+decoderSex : Json.Decode.Decoder Sex
+decoderSex =
+    Json.Decode.string
+        |> Json.Decode.andThen
+            (\string ->
+                case string of
+                    "Male" ->
+                        Json.Decode.succeed Male
+
+                    "Female" ->
+                        Json.Decode.succeed Female
+
+                    _ ->
+                        Json.Decode.fail ("Invalid Spouse: " ++ string)
+            )
+
+
+
+--     in
+--     Json.Decode.decodeValue Json.Decode.string decodeToType
+
+
 list1 : List Tc
 list1 =
     [ { id = "1"
@@ -193,11 +273,11 @@ point id bi =
 type Msg
     = FooMsg Id BennyInfo
     | UpdateSpousalMsg Id
-    | ChangeSdob Id String
+      -- | ChangeSdob Id String
     | MouseEnter Id
     | MouseLeave
     | AddOrRemoveBenny Id
-    | ChangeDate String Id String
+      -- | ChangeDate String Id String
     | ChangeString String Id String
     | ChangeCalcType Id
     | ChangeStatus Id
@@ -208,6 +288,7 @@ type Msg
     | NewOne
     | DeleteAll
     | ChangeStat Id
+    | ToggleOnDesktop Id
 
 
 red : Html.Attribute Msg
@@ -246,7 +327,7 @@ pointerMsg msg =
 
 lii : String -> String -> Tc -> Html Msg
 lii field currentValue tc =
-    li [] [ label pointer [ text field, input [ value currentValue, onInput (ChangeDate field tc.id) ] [] ] ]
+    li [] [ label pointer [ text field, input [ value currentValue, onInput (ChangeString field tc.id) ] [] ] ]
 
 
 liDate : String -> String -> (String -> Msg) -> Html Msg
@@ -261,21 +342,16 @@ toHtmlTc color tc model =
             tc.id
     in
     ul [ onMouseLeave MouseLeave, onMouseEnter (MouseEnter i), style "border" "dotted", color ]
-        [ li [] [ "id " ++ i |> text, button [ onClick (Clone i) ] [ text "clone" ], button [ onClick (Delete i) ] [ text "delete" ], checkboxi (ToggleIndividualFilter i) "filter" i model ]
-        , li [] [ label pointer [ text "dob", input [ placeholder "mm/dd/yyyy", value tc.dob, onInput (ChangeDate "dob" i) ] [] ] ]
-        , li [] [ label pointer [ text "doe", input [ placeholder "mm/dd/yyyy", value tc.doe, onInput (ChangeDate "doe" i) ] [], text (calcAge tc.dob tc.doe) ] ]
-        , li [] [ label pointer [ text "dot", input [ placeholder "mm/dd/yyyy", value tc.dot, onInput (ChangeDate "dot" i) ] [], text (calcAge tc.dob tc.dot) ] ]
-        , li [] [ label pointer [ text "doc", input [ placeholder "mm/dd/yyyy", value tc.doc, onInput (ChangeDate "doc" i) ] [], text (calcAge tc.dob tc.doc) ] ]
+        [ li ((ToggleOnDesktop i |> onClick) |> pointerMsg) [ "id " ++ i |> text, button [ onClick (Clone i) ] [ text "clone" ], button [ onClick (Delete i) ] [ text "delete" ], checkboxi (ToggleIndividualFilter i) "filter" i model ]
+        , li [] [ label pointer [ text "dob", input [ placeholder "mm/dd/yyyy", value tc.dob, onInput (ChangeString "dob" i) ] [] ] ]
+        , li [] [ label pointer [ text "doe", input [ placeholder "mm/dd/yyyy", value tc.doe, onInput (ChangeString "doe" i) ] [], text (calcAge tc.dob tc.doe) ] ]
+        , li [] [ label pointer [ text "dot", input [ placeholder "mm/dd/yyyy", value tc.dot, onInput (ChangeString "dot" i) ] [], text (calcAge tc.dob tc.dot) ] ]
+        , li [] [ label pointer [ text "doc", input [ placeholder "mm/dd/yyyy", value tc.doc, onInput (ChangeString "doc" i) ] [], text (calcAge tc.dob tc.doc) ] ]
         , li [] [ label pointer [ text "pbc", input [ value tc.pbc, onInput (ChangeString "pbc" i) ] [] ] ]
-        , li ((ChangeCalcType i |> onClick) |> pointerMsg) [ typeMapToString calcTypeMap tc.calcType |> text ]
         , li [] [ label (pointerMsg (ChangeCalcType i |> onClick)) [ text "calc type" ], typeMapToString calcTypeMap tc.calcType |> text ]
-        , li [] [ label (pointerMsg (onClick (ChangeCalcType i))) [ text "calc type" ], typeMapToString calcTypeMap tc.calcType |> text ]
         , li [] [ label (pointerMsg (onClick (ChangeStatus i))) [ text "status" ], typeMapToString statusMap tc.status |> text ]
         , toHtmlBennyInfo tc
         , liStat tc
-
-        -- , li [] [ checkbox (ToggleIndividualFilter i) "filter" ]
-        -- , li [] [ checkboxi (ToggleIndividualFilter i) "filter" i model ]
         ]
 
 
@@ -302,18 +378,29 @@ liStat tc =
 
         Certed { notes, run, certed } ->
             li []
-                [ label (pointerMsg (onClick (ChangeStat tc.id))) [ text "stat" ]
+                [ (ChangeStat tc.id
+                    |> onClick
+                    |> pointerMsg
+                    |> label
+                  )
+                    [ text "stat" ]
                 , text "Certed"
                 , input
                     [ placeholder "enter run date"
                     , value run
-                    , onInput (ChangeString "run" tc.id)
+                    , onInput <| ChangeString "run" tc.id
                     ]
                     []
                 , input
                     [ placeholder "enter certed date"
                     , value certed
-                    , onInput (ChangeString "certed" tc.id)
+                    , onInput <| ChangeString "certed" tc.id
+                    ]
+                    []
+                , input
+                    [ placeholder "enter data notes"
+                    , value notes
+                    , onInput <| ChangeString "notes" tc.id
                     ]
                     []
                 ]
@@ -322,7 +409,7 @@ liStat tc =
 toHtmlBennyInfo : Tc -> Html Msg
 toHtmlBennyInfo tc =
     case tc.bennyInfo of
-        NoBeneficiary { sdob, spousal, sex } ->
+        NoBeneficiary _ ->
             li (pointerMsg (AddOrRemoveBenny tc.id |> onClick)) [ text "No beneficiary" ]
 
         Beneficiary { sdob, spousal, sex } ->
@@ -330,9 +417,8 @@ toHtmlBennyInfo tc =
                 [ label (pointerMsg (AddOrRemoveBenny tc.id |> onClick)) [ text "Beneficiary" ]
                 , ul []
                     [ li ((UpdateSpousalMsg tc.id |> onClick) |> pointerMsg) [ toString spousal |> text ]
-                    , li [] [ "dob " ++ sdob |> text ]
                     , li []
-                        [ label [ style "cursor" "pointer" ] [ text "dob", input [ value sdob, onInput (ChangeSdob tc.id) ] [] ]
+                        [ label [ style "cursor" "pointer" ] [ text "sdob", input [ value sdob, onInput (ChangeString "bennyInfo.sdob" tc.id) ] [] ]
                         ]
                     , li (point tc.id tc.bennyInfo) [ typeMapToString sexMap sex |> text ]
                     ]
@@ -346,24 +432,22 @@ toLi str =
 
 type alias Model =
     { data : List Tc
-
-    -- , editing : { id : Maybe Id, field : Maybe String }
     , editing : { id : Maybe Id }
     , idGen : IdGenerator
     , filterOn : Bool
     , individualFilterOn : List Id
+    , onDesktop : List Id
     }
 
 
 initModel =
     { data =
         list1
-
-    -- , editing = { id = Nothing, field = Nothing }
     , editing = { id = Nothing }
     , idGen = initIdGen
     , filterOn = True
     , individualFilterOn = []
+    , onDesktop = []
     }
 
 
@@ -765,9 +849,6 @@ update msg model =
             else
                 { model | individualFilterOn = i :: model.individualFilterOn }
 
-        ChangeDate field i date ->
-            { model | data = data |> updateField i field date }
-
         ChangeString field i string ->
             { model | data = data |> updateField i field string }
 
@@ -775,31 +856,48 @@ update msg model =
             { model | data = data |> updateIf (\a -> a.id == i) flipBenny }
 
         MouseEnter i ->
-            -- { model | editing = { id = Just i, field = Nothing } }
-            let
-                x =
-                    Debug.toString i
-            in
             { model | editing = { id = Just i } }
 
         MouseLeave ->
             { model | editing = { id = Nothing } }
 
-        ChangeSdob i date ->
+        ToggleOnDesktop i ->
             let
-                d =
-                    model.data
-                        |> List.map
-                            (\v ->
-                                if i == v.id then
-                                    { v | bennyInfo = updateDob date v.bennyInfo }
-
-                                else
-                                    v
-                            )
+                hasI =
+                    List.length (List.filter (\id -> id == i) model.onDesktop) /= 0
             in
-            { model | data = d }
+            if hasI then
+                { model | onDesktop = List.filter (\id -> id /= i) model.onDesktop }
 
+            else
+                { model | onDesktop = i :: model.onDesktop }
+
+        -- ChangeSdob i date ->
+        --     let
+        --         d =
+        --             model.data
+        --                 |> List.map
+        --                     (\v ->
+        --                         if i == v.id then
+        --                             { v | bennyInfo = updateDob date v.bennyInfo }
+        --                         else
+        --                             v
+        --                     )
+        --     in
+        --     { model | data = d }
+        -- ChangeSdob i date ->
+        --     let
+        --         d =
+        --             model.data
+        --                 |> List.map
+        --                     (\v ->
+        --                         if i == v.id then
+        --                             { v | bennyInfo = updateDob date v.bennyInfo }
+        --                         else
+        --                             v
+        --                     )
+        --     in
+        --     { model | data = d }
         UpdateSpousalMsg i ->
             { model
                 | data =
@@ -899,8 +997,6 @@ view model =
                 ]
             , span []
                 [ model.data
-                    -- |> List.filter (hasId "1001" >> not)
-                    --|> List.filter (always model.filterOn)
                     |> List.filter filterTc
                     |> List.length
                     |> String.fromInt
@@ -911,7 +1007,14 @@ view model =
             , span [] [ button [ onClick NewOne ] [ text "New" ] ]
             , span [] [ button [ onClick DeleteAll ] [ text "Delete all" ] ]
             ]
-        , div []
+        , div [ style "font-family" "monospace" ]
+            [ model.data
+                |> List.filter (\tc -> List.any (\i -> i == tc.id) model.onDesktop)
+                |> List.filter filterTc
+                |> List.map (\tc -> toHtmlTc (colortc tc model) tc model)
+                |> ul []
+            ]
+        , div [ style "font-family" "monospace" ]
             [ model.data
                 |> List.filter filterTc
                 |> List.map (\tc -> toHtmlTc (colortc tc model) tc model)
@@ -919,15 +1022,7 @@ view model =
             ]
         , hr [] []
         , div [] [ text (model |> toS) ]
-        ]
-
-
-checkbox : msg -> String -> Html msg
-checkbox msg name =
-    label
-        [ style "padding" "20px" ]
-        [ input [ type_ "checkbox", onClick msg ] []
-        , text name
+        , div [] [ text toStringModel ]
         ]
 
 
@@ -947,6 +1042,3 @@ checkboxi msg name i model =
         [ input [ type_ "checkbox", checked (not (List.any (\id -> id == i) model.individualFilterOn)), onClick msg ] []
         , text name
         ]
-
-
-
