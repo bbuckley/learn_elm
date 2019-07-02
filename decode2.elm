@@ -1,7 +1,16 @@
-module Decode2 exposing (User, anonDecoder, manDecoder, personDecoder, result, userDecoder)
+module Decode2 exposing (Ben, Client(..), Sex(..), User, anonDecoder, benDecoder, benEncoder, clientDecoder, manDecoder, personDecoder, result, sexDecoder, sexEncoder, userDecoder, userEncoder)
 
+-- import Json.Encode.Pipeline exposing (list)
+
+import Html exposing (..)
 import Json.Decode as Decode exposing (Decoder, int, string)
 import Json.Decode.Pipeline exposing (required)
+import Json.Encode as Encode
+
+
+
+--exposing (list)
+--exposing (Value, list)
 
 
 type Sex
@@ -107,10 +116,8 @@ userDecoder =
         |> required "clients" (Decode.list clientDecoder)
 
 
-result : Result Decode.Error User
-result =
-    Decode.decodeString userDecoder
-        """
+json_before =
+    """
  {
 "id": 123, 
 "email": "sam@example.com", "name": "Sam", 
@@ -122,7 +129,90 @@ result =
     {"type":"Anon"},
     {"type":"Person", "sex": "Male","name":"Brian","id": 77},
     {"type":"Person", "sex": "Male","name":"B","id": 79},
-    {"type":"Man", "sex": "Female", "i": 79}
+    {"type":"Man", "i": 79, "foo" : "ioioioioioioioi"}
     ]
  }
  """
+
+
+result : String -> Result Decode.Error User
+result s =
+    Decode.decodeString userDecoder s
+
+
+benEncoder : Ben -> Encode.Value
+benEncoder record =
+    Encode.object
+        [ ( "id", Encode.int <| record.id )
+        , ( "name", Encode.string <| record.name )
+        , ( "sex", sexEncoder <| record.sex )
+        ]
+
+
+sexEncoder : Sex -> Encode.Value
+sexEncoder sex =
+    case sex of
+        Male ->
+            Encode.string "Male"
+
+        Female ->
+            Encode.string "Female"
+
+
+clientEncoder : Client -> Encode.Value
+clientEncoder client =
+    case client of
+        Anon ->
+            Encode.object
+                [ ( "type", Encode.string <| "Anon" ) ]
+
+        Person { id, name, sex } ->
+            Encode.object
+                [ ( "type", Encode.string "Person" )
+                , ( "id", Encode.int id )
+                , ( "name", Encode.string name )
+                , ( "sex", sexEncoder sex )
+                ]
+
+        -- Person ben ->
+        --     benEncoder ben
+        Man i ->
+            Encode.object
+                [ ( "type", Encode.string <| "Man" )
+                , ( "i", Encode.int <| i )
+                ]
+
+
+userEncoder : User -> Encode.Value
+userEncoder record =
+    Encode.object
+        [ ( "id", Encode.int <| record.id )
+        , ( "email", Encode.string <| record.email )
+        , ( "name", Encode.string <| record.name )
+        , ( "sex", sexEncoder <| record.sex )
+        , ( "sexes", Encode.list identity <| List.map sexEncoder <| record.sexes )
+        , ( "ben", record.ben |> benEncoder )
+        , ( "bens", Encode.list identity <| List.map benEncoder <| record.bens )
+        , ( "clients", Encode.list identity <| List.map clientEncoder <| record.clients )
+        ]
+
+
+json_after : String -> String
+json_after before =
+    case Decode.decodeString userDecoder before of
+        Ok user ->
+            user |> userEncoder |> Encode.encode 2
+
+        Err e ->
+            "not good"
+
+
+main : Html msg
+main =
+    div []
+        [ div [] [ text json_before ]
+        , hr [] []
+        , div [] [ text (json_before |> json_after) ]
+        , hr [] []
+        , div [] [ text (json_before |> json_after |> json_after) ]
+        ]

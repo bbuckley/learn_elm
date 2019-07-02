@@ -2,7 +2,7 @@ module Married exposing (Ben, BennyInfo(..), CalcType(..), Data, Date, Id, IdGen
 
 import Browser exposing (..)
 import Html exposing (..)
-import Html.Attributes exposing (checked, placeholder, style, type_, value)
+import Html.Attributes exposing (checked, placeholder, style, type_, value, title)
 import Html.Events exposing (onClick, onDoubleClick, onInput, onMouseEnter, onMouseLeave)
 import Json.Decode exposing (Decoder, Error, andThen, decodeString)
 import List.Extra exposing (updateIf)
@@ -187,11 +187,8 @@ decoderSex =
                         Json.Decode.fail ("Invalid Spouse: " ++ string)
             )
 
-
-
---     in
---     Json.Decode.decodeValue Json.Decode.string decodeToType
-
+-- decoderModel : Json.Decode.Decoder Model
+-- decoderModel =
 
 list1 : List Tc
 list1 =
@@ -324,6 +321,10 @@ pointerMsg : Html.Attribute Msg -> List (Html.Attribute Msg)
 pointerMsg msg =
     [ style "cursor" "pointer", msg ]
 
+pointerClickToChangeMsg : String -> Html.Attribute Msg -> List (Html.Attribute Msg)
+pointerClickToChangeMsg tooltip msg =
+    [ style "cursor" "pointer", title tooltip, msg ]
+
 
 lii : String -> String -> Tc -> Html Msg
 lii field currentValue tc =
@@ -420,7 +421,8 @@ toHtmlBennyInfo tc =
                     , li []
                         [ label [ style "cursor" "pointer" ] [ text "sdob", input [ value sdob, onInput (ChangeString "bennyInfo.sdob" tc.id) ] [] ]
                         ]
-                    , li (point tc.id tc.bennyInfo) [ typeMapToString sexMap sex |> text ]
+                    , li ((point tc.id tc.bennyInfo) ++ [title "click to change"]) [ typeMapToString sexMap sex |> text ]
+                   -- , li (pointerClickToChangeMsg "click to change" (flipSex sex))  [ typeMapToString sexMap sex |> text ]
                     ]
                 ]
 
