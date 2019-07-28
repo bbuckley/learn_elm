@@ -1,5 +1,6 @@
-module Main exposing (..)
+module Main exposing (Hist, Model, Msg(..), addN, addWord, checkbox, config, filtered, freq, freqN, frequency, frequencyN, groupInt, initModel, isChecked, main, sentence, update, view, viewChecked, viewGroupInt, x, y, z)
 
+import Browser
 import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -11,6 +12,18 @@ x : List Int
 x =
     List.append [ 111, 111 ]
         [ 111, 111, 111, 10, 2, 3, 2, 4, 3, 5, 3, 2 ]
+
+
+listIntToString : List Int -> String
+listIntToString list =
+    list |> List.map String.fromInt |> String.concat
+
+
+listToString : (a -> String) -> List a -> String
+listToString a list =
+  list |> List.map a |> String.concat
+-- listToString a list =
+--     list |> List.map a |> String.concat
 
 
 y : List Int
@@ -32,6 +45,7 @@ addWord : String -> Dict String Int -> Dict String Int
 addWord word dict =
     if Dict.member word dict then
         Dict.update word (Maybe.map ((+) 1)) dict
+
     else
         Dict.insert word 1 dict
 
@@ -49,6 +63,7 @@ addN : Int -> Hist -> Hist
 addN n dict =
     if Dict.member n dict then
         Dict.update n (Maybe.map ((+) 1)) dict
+
     else
         Dict.insert n 1 dict
 
@@ -71,10 +86,10 @@ freq list =
 isChecked : List Int -> String -> Bool
 isChecked list str =
     case String.toInt str of
-        Ok i ->
+        Just i ->
             List.member i list
 
-        Err msg ->
+        Nothing ->
             False
 
 
@@ -88,14 +103,15 @@ checkbox name v bool =
 
 viewChecked : Model -> List Int -> Html Msg
 viewChecked model ele =
-    fieldset []
-        (List.map
-            (\el -> checkbox (toString el) (toString el) (not (List.member el model.out)))
-            ele
-        )
+    fieldset [] []
 
 
 
+-- fieldset []
+--     (List.map
+--         (\el -> checkbox (listIntToString el) (listIntToString el) (not (List.member el model.out)))
+--         ele
+--     )
 -- ageRange: List Int -> String
 -- ageRange =
 --   case []-> "Invalid"
@@ -143,12 +159,15 @@ type alias Model =
     }
 
 
+foo : Int
+foo = 8
+
 groupInt : List { id : Int, desc : String, fn : number -> Bool }
 groupInt =
-    [ { id = 0, desc = "19 or less", fn = \x -> x < 20 }
-    , { id = 1, desc = "20-24", fn = \x -> x >= 20 && x <= 24 }
-    , { id = 2, desc = "25-29", fn = \x -> x >= 25 && x <= 29 }
-    , { id = 3, desc = "30 or more", fn = \x -> x >= 30 }
+    [ { id = 0, desc = "19 or less", fn = \i -> i < 20 }
+    , { id = 1, desc = "20-24", fn = \i -> i >= 20 && i <= 24 }
+    , { id = 2, desc = "25-29", fn = \i -> i >= 25 && i <= 29 }
+    , { id = 3, desc = "30 or more", fn = \i -> i >= 30 }
     ]
 
 
@@ -159,18 +178,20 @@ update msg model =
             -- { model | groupOut = id :: model.groupOut }
             if not (List.member i model.groupOut) then
                 { model | groupOut = i :: model.groupOut }
+
             else
                 { model | groupOut = List.filter (\e -> e /= i) model.groupOut }
 
         ToggleInt str ->
             case String.toInt str of
-                Ok i ->
+                Just i ->
                     if not (List.member i model.out) then
                         { model | out = i :: model.out }
+
                     else
                         { model | out = List.filter (\e -> e /= i) model.out }
 
-                Err msg ->
+                Nothing ->
                     model
 
 
@@ -184,9 +205,20 @@ initModel =
     Model x [] [ ( 20, True ), ( 30, False ), ( 40, False ), ( 50, False ), ( 60, False ) ] []
 
 
-main : Program Never Model Msg
+
+-- main : Program Never Model Msg
+-- main =
+--     Html.beginnerProgram { model = initModel, view = view, update = update }
+
+
+main : Program () Model Msg
 main =
-    Html.beginnerProgram { model = initModel, view = view, update = update }
+    Browser.element
+        { init = (initModel, Cmd.none)
+        , view = view
+        , update = update
+        , subscriptions = \_ -> Sub.none
+        }
 
 
 filtered : Model -> List Int
@@ -201,7 +233,7 @@ filtered model =
 view : Model -> Html Msg
 view model =
     div []
-        [ h3 [] [ text (toString x ++ " -> " ++ toString (filtered model)) ]
+        [ h3 [] [ text (listIntToString x ++ " -> " ++ (filtered model |> List.map String.fromInt |> String.concat)) ]
 
         -- , p [] [ text (toString x ++ " -> " ++ toString frequencyN) ]
         -- , p [] [ text (toString x ++ " -> " ++ toString (freqN x)) ]
@@ -211,5 +243,5 @@ view model =
 
         -- , viewAgeCheck model
         , viewGroupInt model
-        , p [] [ text (toString model) ]
+        , p [] [ text "toString model" ]
         ]

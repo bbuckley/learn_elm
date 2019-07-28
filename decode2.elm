@@ -1,8 +1,8 @@
-module Decode2 exposing (Ben, Client(..), Sex(..), User, anonDecoder, benDecoder, benEncoder, clientDecoder, manDecoder, personDecoder, result, sexDecoder, sexEncoder, userDecoder, userEncoder)
+module Decode2 exposing (main)
 
 -- import Json.Encode.Pipeline exposing (list)
 
-import Html exposing (..)
+import Html exposing (Html, div, hr, text)
 import Json.Decode as Decode exposing (Decoder, int, string)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
@@ -116,6 +116,7 @@ userDecoder =
         |> required "clients" (Decode.list clientDecoder)
 
 
+json_before : String
 json_before =
     """
  {
@@ -129,15 +130,17 @@ json_before =
     {"type":"Anon"},
     {"type":"Person", "sex": "Male","name":"Brian","id": 77},
     {"type":"Person", "sex": "Male","name":"B","id": 79},
-    {"type":"Man", "i": 79, "foo" : "ioioioioioioioi"}
-    ]
+    {"type":"Man", "i": 79, "foo" : "this is not part of Man"}
+    ],
+"foobar": "foobar is not part of user"
  }
  """
 
 
-result : String -> Result Decode.Error User
-result s =
-    Decode.decodeString userDecoder s
+
+-- result : String -> Result Decode.Error User
+-- result s =
+--     Decode.decodeString userDecoder s
 
 
 benEncoder : Ben -> Encode.Value
@@ -203,7 +206,7 @@ json_after before =
         Ok user ->
             user |> userEncoder |> Encode.encode 2
 
-        Err e ->
+        Err _ ->
             "not good"
 
 

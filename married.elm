@@ -1,12 +1,14 @@
-module Married exposing (Ben, BennyInfo(..), CalcType(..), Data, Date, Id, IdGenerator, Model, Msg(..), Sex(..), Spousal(..), Stat(..), Status(..), Tc, benDef, black, calcAge, calcTypeDomain, calcTypeMap, checkboxg, checkboxi, colortc, dataDef, decoderSpousal, flipBenny, flipSex, hasId, initIdGen, initModel, insertAfter, isDate, json, liDate, liStat, lii, list1, main, new, newOne, nextId, point, pointer, pointerMsg, r, red, reformatDate, sexMap, spousalFromString, spouseDomain, statDomain, statusDomain, statusMap, tc1, testBracket, toHtmlBennyInfo, toHtmlTc, toLi, toLis, toS, toString, toStringBennyInfo, toStringModel, toStringTc, typeMapToString, update, updateCalcType, updateDob, updateField, updateSpousal, updateStat, updateStatus, updateTc, view, year)
+module Married exposing (main)
 
-import Browser exposing (..)
-import Html exposing (..)
-import Html.Attributes exposing (checked, placeholder, style, type_, value, title)
-import Html.Events exposing (onClick, onDoubleClick, onInput, onMouseEnter, onMouseLeave)
+import Browser exposing (sandbox)
+import Dict exposing (Dict)
+import Html exposing (Attribute, Html, button, div, fieldset, hr, input, label, li, p, section, span, text, ul)
+import Html.Attributes exposing (checked, placeholder, style, title, type_, value)
+import Html.Events exposing (onClick, onInput, onMouseEnter, onMouseLeave)
 import Json.Decode exposing (Decoder, Error, andThen, decodeString)
 import List.Extra exposing (updateIf)
-import Selected exposing (..)
+import Selected exposing (cycle, fromList, selected)
+import Set exposing (Set)
 
 
 type alias Id =
@@ -53,12 +55,16 @@ calcTypeMap =
 
 
 type alias Ben =
-    { sdob : String, spousal : Spousal, sex : Sex }
+    { sdob : String
+    , spousal : Spousal
+    , sex : Sex
+    }
 
 
-benDef : Ben
-benDef =
-    { sdob = "", spousal = Spouse, sex = Female }
+
+-- benDef : Ben
+-- benDef =
+--     { sdob = "", spousal = Spouse, sex = Female }
 
 
 type alias Tc =
@@ -73,11 +79,15 @@ type alias Tc =
     , bennyInfo : BennyInfo
     , pbc : String
     , stat : Stat
+    , tags : String
     }
 
 
 type alias Data =
-    { notes : String, run : String, certed : String }
+    { notes : String
+    , run : String
+    , certed : String
+    }
 
 
 type Stat
@@ -107,8 +117,8 @@ sexMap =
 typeMapToString : List ( String, a ) -> a -> String
 typeMapToString pairs key =
     pairs
-        |> List.filter (\( k, v ) -> v == key)
-        |> List.map (\( k, v ) -> k)
+        |> List.filter (\( _, v ) -> v == key)
+        |> List.map (\( k, _ ) -> k)
         |> List.head
         |> Maybe.withDefault "String not supplied in list"
 
@@ -136,12 +146,6 @@ spousalFromString string =
             Json.Decode.fail ("Invalid Spouse: " ++ string)
 
 
-
--- decodeSpousal : Decoder Spousal -> String -> Result Error Spousal
--- decodeSpousal =
---     oneOf [decodeMale, decodeFemale]
-
-
 r : Result Error Spousal
 r =
     -- Json.Decode.decodeString decoderSpousal json
@@ -154,86 +158,71 @@ toStringModel =
         Ok _ ->
             "Ok"
 
-        Err e ->
+        Err _ ->
             "Error"
 
 
 
--- decodeSex : Json.Decode.Decoder Sex
--- decodeSex =
---     let
---         decodeToType string =
---             case string of
---                 "Male" -> Result.Ok Male
---                 "Female" -> Result.Ok Female
---                 _ -> Result.Err ("Not valid pattern for decoder to Sex. Pattern: " ++ string)
---     in
---     Json.Decode.decodeValue Json.Decode.string decodeToType
-
-
-decoderSex : Json.Decode.Decoder Sex
-decoderSex =
-    Json.Decode.string
-        |> Json.Decode.andThen
-            (\string ->
-                case string of
-                    "Male" ->
-                        Json.Decode.succeed Male
-
-                    "Female" ->
-                        Json.Decode.succeed Female
-
-                    _ ->
-                        Json.Decode.fail ("Invalid Spouse: " ++ string)
-            )
-
--- decoderModel : Json.Decode.Decoder Model
--- decoderModel =
-
-list1 : List Tc
-list1 =
-    [ { id = "1"
-      , doc = "1/9/6666"
-      , dob = "1/9/6666"
-      , doe = "1/9/6666"
-      , dot = "1/9/6666"
-      , status = A
-      , sex = Male
-      , calcType = Modeling
-      , pbc = "Brian"
-      , bennyInfo = NoBeneficiary benDef
-      , stat = NeedsSettingUp dataDef
-      }
-    , { id = "2"
-      , doc = "1/9/6666"
-      , dob = "1/9/6666"
-      , doe = "1/9/6666"
-      , dot = "1/9/6666"
-      , status = A
-      , sex = Male
-      , calcType = Modeling
-      , pbc = "Brian"
-      , bennyInfo =
-            Beneficiary
-                { sdob = "12/22/1959"
-                , spousal = Spouse
-                , sex = Female
-                }
-      , stat = NeedsSettingUp dataDef
-      }
-    , { id = "333"
-      , doc = "1/9/6666"
-      , dob = "1/9/6666"
-      , doe = "1/9/6666"
-      , dot = "1/9/6666"
-      , status = A
-      , sex = Male
-      , calcType = Modeling
-      , pbc = "Brian"
-      , bennyInfo = Beneficiary benDef
-      , stat = NeedsSettingUp dataDef
-      }
-    ]
+-- decoderSex : Json.Decode.Decoder Sex
+-- decoderSex =
+--     Json.Decode.string
+--         |> Json.Decode.andThen
+--             (\string ->
+--                 case string of
+--                     "Male" ->
+--                         Json.Decode.succeed Male
+--                     "Female" ->
+--                         Json.Decode.succeed Female
+--                     _ ->
+--                         Json.Decode.fail ("Invalid Spouse: " ++ string)
+--             )
+-- list1 : List Tc
+-- list1 =
+--     [ { id = "1"
+--       , doc = "1/9/6666"
+--       , dob = "1/9/6666"
+--       , doe = "1/9/6666"
+--       , dot = "1/9/6666"
+--       , status = A
+--       , sex = Male
+--       , calcType = Modeling
+--       , pbc = "Brian"
+--       , bennyInfo = NoBeneficiary benDef
+--       , stat = NeedsSettingUp dataDef
+--       , tags = ""
+--       }
+--     , { id = "2"
+--       , doc = "1/9/6666"
+--       , dob = "1/9/6666"
+--       , doe = "1/9/6666"
+--       , dot = "1/9/6666"
+--       , status = A
+--       , sex = Male
+--       , calcType = Modeling
+--       , pbc = "Brian"
+--       , bennyInfo =
+--             Beneficiary
+--                 { sdob = "12/22/1959"
+--                 , spousal = Spouse
+--                 , sex = Female
+--                 }
+--       , stat = NeedsSettingUp dataDef
+--       , tags = ""
+--       }
+--     , { id = "333"
+--       , doc = "1/9/6666"
+--       , dob = "1/9/6666"
+--       , doe = "1/9/6666"
+--       , dot = "1/9/6666"
+--       , status = A
+--       , sex = Male
+--       , calcType = Modeling
+--       , pbc = "Brian"
+--       , bennyInfo = Beneficiary benDef
+--       , stat = NeedsSettingUp dataDef
+--       , tags = ""
+--       }
+--     ]
 
 
 toString : Spousal -> String
@@ -261,20 +250,12 @@ point id bi =
     [ style "cursor" "pointer", onClick (FooMsg id bi) ]
 
 
-
--- attrs : Attribute Msg -> List (Attribute Msg)
--- attrs msg =
---     [ style "cursor" "pointer", msg ]
-
-
 type Msg
     = FooMsg Id BennyInfo
     | UpdateSpousalMsg Id
-      -- | ChangeSdob Id String
     | MouseEnter Id
     | MouseLeave
     | AddOrRemoveBenny Id
-      -- | ChangeDate String Id String
     | ChangeString String Id String
     | ChangeCalcType Id
     | ChangeStatus Id
@@ -282,10 +263,17 @@ type Msg
     | Delete Id
     | ToggleFilter
     | ToggleIndividualFilter Id
+    | ToggleExpanded Id
     | NewOne
     | DeleteAll
     | ChangeStat Id
     | ToggleOnDesktop Id
+    | SelectTag String
+    | DeselectTag String
+
+
+
+-- | RepopulateTags
 
 
 red : Html.Attribute Msg
@@ -300,7 +288,7 @@ black =
 
 colortc : Tc -> Model -> Html.Attribute Msg
 colortc tc model =
-    case model.editing.id of
+    case model.editing of
         Nothing ->
             black
 
@@ -321,29 +309,64 @@ pointerMsg : Html.Attribute Msg -> List (Html.Attribute Msg)
 pointerMsg msg =
     [ style "cursor" "pointer", msg ]
 
-pointerClickToChangeMsg : String -> Html.Attribute Msg -> List (Html.Attribute Msg)
-pointerClickToChangeMsg tooltip msg =
-    [ style "cursor" "pointer", title tooltip, msg ]
 
 
-lii : String -> String -> Tc -> Html Msg
-lii field currentValue tc =
-    li [] [ label pointer [ text field, input [ value currentValue, onInput (ChangeString field tc.id) ] [] ] ]
-
-
-liDate : String -> String -> (String -> Msg) -> Html Msg
-liDate name datev msg =
-    li [] [ label pointer [ text name, input [ placeholder "mm/dd/yyyy", value datev, onInput msg ] [] ] ]
+-- pointerClickToChangeMsg : String -> Html.Attribute Msg -> List (Html.Attribute Msg)
+-- pointerClickToChangeMsg tooltip msg =
+--     [ style "cursor" "pointer", title tooltip, msg ]
+-- lii : String -> String -> Tc -> Html Msg
+-- lii field currentValue tc =
+--     li [] [ label pointer [ text field, input [ value currentValue, onInput (ChangeString field tc.id) ] [] ] ]
+-- liDate : String -> String -> (String -> Msg) -> Html Msg
+-- liDate name datev msg =
+--     li [] [ label pointer [ text name, input [ placeholder "mm/dd/yyyy", value datev, onInput msg ] [] ] ]
 
 
 toHtmlTc : Html.Attribute Msg -> Tc -> Model -> Html Msg
 toHtmlTc color tc model =
+    if List.all (\id -> tc.id /= id) model.expanded then
+        toExpandedHtmlTc color tc model
+
+    else
+        toThinHtmlTc color tc model
+
+
+mark : Model -> Id -> String
+mark model i =
+    if List.any (\id -> id == i) model.expanded then
+        String.fromChar (Char.fromCode 8854)
+
+    else
+        String.fromChar (Char.fromCode 10753)
+
+
+toThinHtmlTc : Html.Attribute Msg -> Tc -> Model -> Html Msg
+toThinHtmlTc color tc model =
+    let
+        i =
+            tc.id
+    in
+    p [ onMouseLeave MouseLeave, onMouseEnter (MouseEnter i), style "border" "dotted", color ]
+        [ span []
+            [ span
+                [ style "cursor" "pointer"
+                , style "font-size" "24px"
+                , onClick (ToggleExpanded i)
+                ]
+                [ text (mark model i ++ tc.id) ]
+            ]
+        ]
+
+
+toExpandedHtmlTc : Html.Attribute Msg -> Tc -> Model -> Html Msg
+toExpandedHtmlTc color tc model =
     let
         i =
             tc.id
     in
     ul [ onMouseLeave MouseLeave, onMouseEnter (MouseEnter i), style "border" "dotted", color ]
-        [ li ((ToggleOnDesktop i |> onClick) |> pointerMsg) [ "id " ++ i |> text, button [ onClick (Clone i) ] [ text "clone" ], button [ onClick (Delete i) ] [ text "delete" ], checkboxi (ToggleIndividualFilter i) "filter" i model ]
+        -- [ li ((ToggleOnDesktop i |> onClick) |> pointerMsg) [ span [] [ text "x" ], "id " ++ i |> text, button [ onClick (Clone i) ] [ text "clone" ], button [ onClick (Delete i) ] [ text "delete" ], checkboxi (ToggleIndividualFilter i) "filter" i model ]
+        [ li [] [ span ((ToggleExpanded i |> onClick) |> pointerMsg) [ text (mark model i) ], span ((ToggleOnDesktop i |> onClick) |> pointerMsg) [ "id " ++ i |> text ], button [ onClick (Clone i) ] [ text "clone" ], button [ onClick (Delete i) ] [ text "delete" ], checkboxi (ToggleIndividualFilter i) "filter" i model ]
         , li [] [ label pointer [ text "dob", input [ placeholder "mm/dd/yyyy", value tc.dob, onInput (ChangeString "dob" i) ] [] ] ]
         , li [] [ label pointer [ text "doe", input [ placeholder "mm/dd/yyyy", value tc.doe, onInput (ChangeString "doe" i) ] [], text (calcAge tc.dob tc.doe) ] ]
         , li [] [ label pointer [ text "dot", input [ placeholder "mm/dd/yyyy", value tc.dot, onInput (ChangeString "dot" i) ] [], text (calcAge tc.dob tc.dot) ] ]
@@ -351,21 +374,85 @@ toHtmlTc color tc model =
         , li [] [ label pointer [ text "pbc", input [ value tc.pbc, onInput (ChangeString "pbc" i) ] [] ] ]
         , li [] [ label (pointerMsg (ChangeCalcType i |> onClick)) [ text "calc type" ], typeMapToString calcTypeMap tc.calcType |> text ]
         , li [] [ label (pointerMsg (onClick (ChangeStatus i))) [ text "status" ], typeMapToString statusMap tc.status |> text ]
+        , li [ title "click to change", style "cursor" "pointer", onClick (ChangeStatus i) ] [ typeMapToString statusMap tc.status |> text ]
         , toHtmlBennyInfo tc
         , liStat tc
+        , li []
+            [ label pointer [ text "tags", input [ placeholder "add tags", value tc.tags, onInput (ChangeString "tags" i) ] [] ]
+            , tc.tags |> tags
+            ]
         ]
+
+
+
+-- uniq list =
+--     list |> Set.fromList |> Set.toList
+
+
+uniq : List comparable -> List comparable
+uniq =
+    Set.fromList >> Set.toList
+
+
+freq : List Tc -> Dict Word (List Id)
+freq list =
+    list
+        |> List.map
+            (\tc ->
+                ( tc.id
+                , tc.tags
+                    |> String.replace "," " "
+                    |> String.split " "
+                    |> List.map (\s -> String.trim s)
+                    |> List.filter (\s -> String.length s /= 0)
+                    |> uniq
+                )
+            )
+        |> List.foldl addTags Dict.empty
+
+
+addTag : ( Id, Word ) -> Dict Word (List Id) -> Dict Word (List Id)
+addTag ( id, word ) d =
+    if Dict.member word d then
+        Dict.update word (Maybe.map (\v -> id :: v)) d
+
+    else
+        Dict.insert word [ id ] d
+
+
+addTags : ( Id, List Word ) -> Dict Word (List Id) -> Dict Word (List Id)
+addTags ( id, words ) d =
+    List.foldl (\word -> addTag ( id, word )) d words
+
+
+
+-- hist : List ( Id, List Word ) -> Dict Word (List Id)
+-- hist list =
+--     List.foldl addTags Dict.empty list
+
+
+tags : String -> Html Msg
+tags =
+    String.replace "," " "
+        >> String.split " "
+        >> List.map (\s -> String.trim s)
+        >> List.filter (\s -> String.length s /= 0)
+        >> uniq
+        >> List.length
+        >> String.fromInt
+        >> text
 
 
 liStat : Tc -> Html Msg
 liStat tc =
     case tc.stat of
-        NeedsSettingUp data ->
+        NeedsSettingUp _ ->
             li [] [ label (pointerMsg (onClick (ChangeStat tc.id))) [ text "stat" ], text "Needs Setup" ]
 
-        ReadyToRun data ->
+        ReadyToRun _ ->
             li [] [ label (pointerMsg (onClick (ChangeStat tc.id))) [ text "stat" ], text "Ready to run" ]
 
-        Run { notes, run, certed } ->
+        Run { run } ->
             li []
                 [ label (pointerMsg (onClick (ChangeStat tc.id))) [ text "stat" ]
                 , text "Run"
@@ -421,40 +508,69 @@ toHtmlBennyInfo tc =
                     , li []
                         [ label [ style "cursor" "pointer" ] [ text "sdob", input [ value sdob, onInput (ChangeString "bennyInfo.sdob" tc.id) ] [] ]
                         ]
-                    , li ((point tc.id tc.bennyInfo) ++ [title "click to change"]) [ typeMapToString sexMap sex |> text ]
-                   -- , li (pointerClickToChangeMsg "click to change" (flipSex sex))  [ typeMapToString sexMap sex |> text ]
+                    , li (point tc.id tc.bennyInfo ++ [ title "click to change" ]) [ typeMapToString sexMap sex |> text ]
                     ]
                 ]
 
 
-toLi : String -> Html msg
-toLi str =
-    li [] [ text str ]
+
+-- toLi : String -> Html msg
+-- toLi str =
+--     li [] [ text str ]
+
+
+type alias Word =
+    String
+
+
+type alias Words =
+    { include : List Word -- in Model?
+    , exclude : List Word -- in Model?
+    , dict : Dict Word (List Id) -- in Model? generate dynamically?
+    , tags : List Word -- dict.keys?
+    , selected : Set Word
+    }
+
+
+
+-- wordsDef = Words {include=[],exclude=[],dict=Dict.empty,tags=[],selected=Set.empty}
+-- wordsDef =
+--     Words [] [] Dict.empty [] Set.empty
 
 
 type alias Model =
     { data : List Tc
-    , editing : { id : Maybe Id }
+
+    -- , editing : { id : Maybe Id }
+    , editing : Maybe Id
     , idGen : IdGenerator
     , filterOn : Bool
     , individualFilterOn : List Id
     , onDesktop : List Id
+    , expanded : List Id
+    , words : Words
+
+    -- , tags : String
     }
 
 
+initModel : Model
 initModel =
-    { data =
-        list1
-    , editing = { id = Nothing }
+    { data = []
+    , editing = Nothing
     , idGen = initIdGen
     , filterOn = True
     , individualFilterOn = []
     , onDesktop = []
+    , expanded = []
+    , words = Words [] [] Dict.empty [ "aa", "bb", "cc" ] (Set.fromList [ "bb" ])
     }
 
 
-toLis =
-    toStringBennyInfo >> (\s -> li [] [ text s ])
+
+-- toLis : BennyInfo -> Html Msg
+-- toLis =
+--     toStringBennyInfo >> (\s -> li [] [ text s ])
 
 
 main : Program () Model Msg
@@ -480,14 +596,14 @@ updateSpousal bi =
                 }
 
 
-updateDob : String -> BennyInfo -> BennyInfo
-updateDob string bi =
-    case bi of
-        NoBeneficiary b ->
-            NoBeneficiary { b | sdob = string }
 
-        Beneficiary b ->
-            Beneficiary { b | sdob = string }
+-- updateDob : String -> BennyInfo -> BennyInfo
+-- updateDob string bi =
+--     case bi of
+--         NoBeneficiary b ->
+--             NoBeneficiary { b | sdob = string }
+--         Beneficiary b ->
+--             Beneficiary { b | sdob = string }
 
 
 flipSex : BennyInfo -> BennyInfo
@@ -504,17 +620,18 @@ flipSex bi =
                 Beneficiary { b | sex = Male }
 
 
-reformatDate : String -> String
-reformatDate mdy =
-    mdy
-        |> String.split "/"
-        |> (\i -> ( i, List.length i ))
-        |> (\( i, n ) ->
-                -- [m, d, y] -> [y, m, d]
-                List.take 1 (List.reverse i)
-                    ++ List.take (n - 1) i
-           )
-        |> String.join "-"
+
+-- reformatDate : String -> String
+-- reformatDate mdy =
+--     mdy
+--         |> String.split "/"
+--         |> (\i -> ( i, List.length i ))
+--         |> (\( i, n ) ->
+--                 -- [m, d, y] -> [y, m, d]
+--                 List.take 1 (List.reverse i)
+--                     ++ List.take (n - 1) i
+--            )
+--         |> String.join "-"
 
 
 isDate : String -> Bool
@@ -564,34 +681,41 @@ calcAge a b =
 --     { sdob = "", sex = Male, spousal = Spouse }
 
 
-type alias IdGenerator =
-    { next : Id }
+-- type alias IdGenerator =
+--     { next : Id }
+
+type alias IdGenerator = Id
+
+
+
+-- type Gen Id
 
 
 initIdGen : IdGenerator
 initIdGen =
-    { next = "1000" }
-
+    "1000" 
+    -- { next = "1000" }
 
 nextId : IdGenerator -> IdGenerator
 nextId idGen =
-    { idGen
-        | next =
-            case String.toInt idGen.next of
+    -- { idGen
+    --     | next =
+            case String.toInt idGen of
                 Nothing ->
                     "1000"
 
                 Just i ->
                     String.fromInt (i + 1)
-    }
+    -- }
 
 
+newOne : String -> Tc
 newOne id =
-    { tc1 | id = id }
+    { tcDef | id = id }
 
 
-tc1 : Tc
-tc1 =
+tcDef : Tc
+tcDef =
     { id = ""
     , doc = ""
     , dob = ""
@@ -603,35 +727,42 @@ tc1 =
     , pbc = ""
     , bennyInfo = Beneficiary { sdob = "", spousal = Spouse, sex = Female }
     , stat = NeedsSettingUp dataDef
+    , tags = ""
     }
 
 
-new : Id -> Tc
-new id =
-    { id = id
-    , doc = ""
-    , dob = ""
-    , doe = ""
-    , dot = ""
-    , status = A
-    , sex = Male
-    , calcType = Modeling
-    , pbc = ""
-    , bennyInfo = NoBeneficiary { sdob = "", spousal = Spouse, sex = Female }
-    , stat = NeedsSettingUp dataDef
-    }
+
+-- new : Id -> Tc
+-- new id =
+--     { id = id
+--     , doc = ""
+--     , dob = ""
+--     , doe = ""
+--     , dot = ""
+--     , status = A
+--     , sex = Male
+--     , calcType = Modeling
+--     , pbc = ""
+--     , bennyInfo = NoBeneficiary { sdob = "", spousal = Spouse, sex = Female }
+--     , stat = NeedsSettingUp dataDef
+--     , tags = ""
+--     }
 
 
+calcTypeDomain : List CalcType
 calcTypeDomain =
     [ UI1, Modeling, ModelingAB, Final, TermAB ]
 
 
+statusDomain : List Status
 statusDomain =
     [ A, T, L, D ]
 
 
-statDomain data =
-    [ NeedsSettingUp data, ReadyToRun data, Run data, Certed data ]
+
+-- statDomain : Data -> List Stat
+-- statDomain data =
+--     [ NeedsSettingUp data, ReadyToRun data, Run data, Certed data ]
 
 
 updateCalcType : Id -> List Tc -> List Tc
@@ -641,6 +772,7 @@ updateCalcType i =
         (\a -> { a | calcType = fromList a.calcType calcTypeDomain |> cycle |> selected })
 
 
+dataDef : Data
 dataDef =
     { notes = "", run = "", certed = "" }
 
@@ -665,8 +797,8 @@ updateStat i list =
                 Certed data ->
                     NeedsSettingUp data
 
-        statNew v =
-            { v | stat = x }
+        -- statNew v =
+        --     { v | stat = x }
     in
     updateIf id (\v -> { v | stat = x v }) list
 
@@ -720,6 +852,9 @@ updateTc field value tc =
         "pbc" ->
             { tc | pbc = value }
 
+        "tags" ->
+            { tc | tags = value }
+
         "bennyInfo.sdob" ->
             { tc
                 | bennyInfo =
@@ -768,6 +903,12 @@ hasId i tc =
     tc.id == i
 
 
+
+-- hasI : Id -> Id -> Bool
+-- hasI i id =
+--     id == i
+
+
 insertAfter : Id -> Tc -> List Tc -> List Tc
 insertAfter i b list =
     case List.Extra.findIndex (hasId i) list of
@@ -775,105 +916,120 @@ insertAfter i b list =
             List.take (n + 1) list ++ (b :: List.drop (n + 1) list)
 
         Nothing ->
-            [ b ] ++ list
+            b :: list
+
+
+toggle : Id -> List Id -> List Id
+toggle i list =
+    if List.any (\id -> id == i) list then
+        List.filter (\id -> id /= i) list
+
+    else
+        i :: list
 
 
 update : Msg -> Model -> Model
 update msg model =
-    let
-        data : List Tc
-        data =
-            model.data
-    in
     case msg of
         DeleteAll ->
-            { model | data = [], individualFilterOn = [] }
+            { model | data = [], individualFilterOn = [], onDesktop = [], expanded = [] }
 
         NewOne ->
             let
                 idGen =
                     model.idGen |> nextId
             in
-            { model | idGen = idGen, data = new idGen.next :: data }
+            { model
+                | idGen = idGen
+                , data = newOne idGen :: model.data
+                , expanded = idGen :: model.expanded
+            }
 
         Clone i ->
             let
                 a : Tc
                 a =
-                    newOne model.idGen.next
-
-                n : Maybe Int
-                n =
-                    List.Extra.findIndex (hasId i) data
+                    newOne model.idGen
 
                 mod =
                     { model | idGen = model.idGen |> nextId }
             in
-            case n of
+            case List.Extra.findIndex (hasId i) model.data of
                 Nothing ->
                     { mod
-                        | data = data ++ [ a ]
+                        | data = model.data ++ [ a ]
                     }
 
                 Just ii ->
                     { mod
-                        | data = insertAfter (String.fromInt ii) a data
+                        | data = insertAfter (String.fromInt ii) a model.data
                     }
 
         Delete i ->
             { model
-                | data =
-                    data
-                        |> List.filter (\tc -> tc.id /= i)
+                | data = model.data |> List.filter (\tc -> tc.id /= i)
                 , individualFilterOn = model.individualFilterOn |> List.filter (\id -> id /= i)
+                , onDesktop = model.onDesktop |> List.filter (\id -> id /= i)
+                , expanded = model.expanded |> List.filter (\id -> id /= i)
             }
 
         ChangeStat i ->
-            { model | data = data |> updateStat i }
+            { model | data = model.data |> updateStat i }
 
         ChangeCalcType i ->
-            { model | data = data |> updateCalcType i }
+            { model | data = model.data |> updateCalcType i }
 
         ChangeStatus i ->
-            { model | data = data |> updateStatus i }
+            { model | data = model.data |> updateStatus i }
 
         ToggleFilter ->
             { model | filterOn = not model.filterOn }
 
         ToggleIndividualFilter i ->
-            let
-                hasI =
-                    List.length (List.filter (\id -> id == i) model.individualFilterOn) /= 0
-            in
-            if hasI then
-                { model | individualFilterOn = List.filter (\id -> id /= i) model.individualFilterOn }
-
-            else
-                { model | individualFilterOn = i :: model.individualFilterOn }
+            { model | individualFilterOn = toggle i model.individualFilterOn }
 
         ChangeString field i string ->
-            { model | data = data |> updateField i field string }
+            { model | data = model.data |> updateField i field string }
 
         AddOrRemoveBenny i ->
-            { model | data = data |> updateIf (\a -> a.id == i) flipBenny }
+            { model | data = model.data |> updateIf (\a -> a.id == i) flipBenny }
 
         MouseEnter i ->
-            { model | editing = { id = Just i } }
+            { model | editing = Just i }
 
         MouseLeave ->
-            { model | editing = { id = Nothing } }
+            { model | editing = Nothing }
 
         ToggleOnDesktop i ->
+            { model | onDesktop = toggle i model.onDesktop }
+
+        ToggleExpanded i ->
+            { model | expanded = toggle i model.expanded }
+
+        -- ChangeTags i string ->
+        --     { model | data = model.data |> updateField i "tags" string }
+        SelectTag tag ->
             let
-                hasI =
-                    List.length (List.filter (\id -> id == i) model.onDesktop) /= 0
+                w =
+                    model.words
             in
-            if hasI then
-                { model | onDesktop = List.filter (\id -> id /= i) model.onDesktop }
+            { model | words = { w | selected = Set.insert tag w.selected } }
 
-            else
-                { model | onDesktop = i :: model.onDesktop }
+        DeselectTag tag ->
+            let
+                w =
+                    model.words
+            in
+            { model | words = { w | selected = Set.remove tag w.selected } }
 
+        -- RepopulateTags ->
+        --     let
+        --         w =
+        --             model.words
+        --         -- x =
+        --         --     Dict.keys (freq model.data)
+        --     in
+        --     { model | words = { w | tags = [], selected = Set.empty } }
         -- ChangeSdob i date ->
         --     let
         --         d =
@@ -914,7 +1070,7 @@ update msg model =
                             )
             }
 
-        FooMsg id bene_info ->
+        FooMsg id _ ->
             { model
                 | data =
                     model.data
@@ -952,7 +1108,7 @@ toS model =
                 |> String.concat
     in
     "editing: "
-        ++ (case model.editing.id of
+        ++ (case model.editing of
                 Just i ->
                     "Just " ++ i
 
@@ -1025,7 +1181,37 @@ view model =
         , hr [] []
         , div [] [ text (model |> toS) ]
         , div [] [ text toStringModel ]
+        , hr [] []
+        , div [] [ text (freq model.data |> Dict.keys |> String.join " ") ]
+        , div []
+            [ text
+                (freq model.data
+                    |> Dict.toList
+                    |> List.map (\( k, v ) -> ( k, String.join "," v ))
+                    |> List.map (\( k, v ) -> k ++ "->[" ++ v ++ "]")
+                    |> String.join " - "
+                )
+            ]
+        , div []
+            [ fieldset [] (List.map (checkbox model.words.selected) model.words.tags)
+            ]
         ]
+
+
+checkbox : Set String -> String -> Html Msg
+checkbox selectedTags tag =
+    let
+        isChecked =
+            Set.member tag selectedTags
+
+        msg =
+            if isChecked then
+                DeselectTag tag
+
+            else
+                SelectTag tag
+    in
+    label [ style "display" "block" ] [ input [ type_ "checkbox", checked isChecked, onClick msg ] [], text tag ]
 
 
 checkboxg : msg -> String -> Model -> Html msg

@@ -41,7 +41,7 @@ cycle selectList =
         ( [], [] ) ->
             selectList
 
-        ( a :: b, c :: d ) ->
+        ( _ :: _, c :: d ) ->
             SelectList (beforeList ++ [ cur ]) c d
 
         ( a :: b, [] ) ->

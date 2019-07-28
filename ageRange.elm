@@ -1,4 +1,4 @@
-module Main exposing (..)
+module Main exposing (ageLabel, main, toZero, x, y, zlength, ztrans, ztrans2)
 
 import Html exposing (..)
 
@@ -67,14 +67,15 @@ ageLabel list =
                     "nothiong"
 
                 Just n ->
-                    toString (n - 1) ++ " - " ++ toString n ++ " + "
+                    String.fromInt (n - 1) ++ " - " ++ String.fromInt n ++ " + "
 
         -- 2 ->
-        --     [ toString (list.head - 1) ++ " - ", toString list.tail ++ " + " ]
+        --     [ String.fromInt (list.head - 1) ++ " - ", String.fromInt list.tail ++ " + " ]
+
         other ->
-            other
+            "other"
 
 
 main : Html msg
 main =
-    text (toString x ++ " " ++ toString (ztrans x) ++ " " ++ toString (ztrans2 x))
+    text (String.fromInt x ++ " " ++ String.fromInt (ztrans x) ++ " " ++ String.fromInt (ztrans2 x))

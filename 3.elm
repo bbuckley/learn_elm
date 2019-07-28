@@ -1,6 +1,6 @@
-module Main exposing (..)
+module Main exposing (main)
 
-import Html exposing (..)
+import Html exposing (Html, text)
 
 
 x : List Int
@@ -10,4 +10,4 @@ x =
 
 main : Html msg
 main =
-    text ("test " ++ toString x)
+    x |> List.map String.fromInt |> String.join "," |> text

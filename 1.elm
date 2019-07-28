@@ -1,6 +1,6 @@
-module Main exposing (..)
+module Main exposing (main)
 
-import Html exposing (..)
+import Html exposing (Html,text)
 
 
 xxx : Int

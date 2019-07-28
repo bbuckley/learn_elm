@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as Json
+import Browser exposing (sandbox)
 
 
 type alias Tc =
@@ -47,9 +48,10 @@ initModel =
     Model 0.08 "0.08" Nothing (Just "pbc") Nothing "pbc" a
 
 
-main : Program Never Model Msg
+
+main : Program () Model Msg
 main =
-    Html.beginnerProgram { model = initModel, view = view, update = update }
+    Browser.sandbox { init = initModel, update = update, view = view }
 
 
 type Msg
@@ -64,6 +66,9 @@ update msg model =
     case msg of
         InterestEnter ->
             case String.toFloat model.interestInput of
+                
+                
+                
                 Ok value ->
                     { model | interestInput = model.interestInput, interest = value, interestInputErrorMessage = Nothing }
 
@@ -114,8 +119,8 @@ renderList tcs =
 
 
 renderHeaders : List String -> Html Msg
-renderHeaders headers =
-    tr [] (List.map (\header -> th [ onClick (Sort header) ] [ text header ]) headers)
+renderHeaders hs =
+    tr [] (List.map (\header -> th [ onClick (Sort header) ] [ text header ]) hs)
 
 
 renderRow : Html Msg
@@ -135,7 +140,7 @@ headers =
 
 renderTable : List Tc -> Html Msg
 renderTable tc =
-    table [ style [ ( "color", "red" ), ( "border", "solid" ) ] ]
+    table [ style  "color" "red" , style "border" "solid" ] 
         [ renderHeaders headers
         , renderRow
         , tr []
@@ -154,13 +159,12 @@ view model =
         [ input [ onEnter InterestEnter, onInput InterestInput, value model.interestInput ] []
         , button [ onClick InterestEnter ] [ text "Interest" ]
         , p [] [ text (viewErr model.interestInputErrorMessage) ]
-        , p [] [ text (toString model) ]
         , div []
             [ br [] []
             , renderList a
             , renderTable a
             ]
-        , p [] [ text (toString (viewTc model)) ]
+        -- , p [] [ text (toString (viewTc model)) ]
         ]
 
 

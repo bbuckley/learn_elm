@@ -1,12 +1,7 @@
-module Kintail.InputWidget
-    exposing
-        ( checkbox
-        , comboBox
-        , custom
-        , lineEdit
-        , radioButton
-        , slider
-        )
+module Kintail.InputWidget exposing
+    ( checkbox, radioButton, lineEdit, comboBox, slider
+    , custom
+    )
 
 {-| Functions for creating input widgets of the general form `a -> Html a`. You
 should use `Html.map` to convert the produced messages to the message type used
@@ -14,6 +9,7 @@ by your app, and the new value should generally be stored in your model and fed
 back in to the `view` function. This means that the value emitted from a given
 fragment of HTML will generally become the input value used to create that same
 fragment of HTML the next time your `view` function is called.
+
 @docs checkbox, radioButton, lineEdit, comboBox, slider
 
 
@@ -23,12 +19,15 @@ fragment of HTML the next time your `view` function is called.
 
 -}
 
-import Array exposing (Array)
+--exposing (Decoder)
+--exposing (Value)
+
+import Array exposing (fromList)
 import Html exposing (Html)
 import Html.Attributes as Attributes
 import Html.Events as Events
-import Json.Decode as Decode exposing (Decoder)
-import Json.Encode as Encode exposing (Value)
+import Json.Decode as Decode
+import Json.Encode as Encode
 import String
 
 
@@ -119,6 +118,7 @@ comboBox attributes toStr allItems =
                             Just newItem ->
                                 if newItem /= currentItem then
                                     Decode.succeed newItem
+
                                 else
                                     Decode.fail "selected item did not change"
 
@@ -159,7 +159,8 @@ slider :
 slider attributes { min, max, step } =
     let
         targetValueDecoder currentValue =
-            Decode.map (String.toFloat >> Result.withDefault currentValue)
+            -- Decode.map (String.toFloat >> Result.withDefault currentValue)
+            Decode.map (String.toFloat >> Maybe.withDefault currentValue)
                 Events.targetValue
 
         newValueDecoder currentValue =
@@ -168,6 +169,7 @@ slider attributes { min, max, step } =
                     (\newValue ->
                         if newValue /= currentValue then
                             Decode.succeed newValue
+
                         else
                             Decode.fail "value did not change"
                     )

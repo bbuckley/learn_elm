@@ -1,6 +1,6 @@
-module Main exposing (..)
+module Main exposing (main)
 
-import Html exposing (..)
+import Html exposing (text,  Html)
 
 
 n : Int
@@ -19,10 +19,10 @@ main =
                 "Your implementation failed one test."
 
             4 ->
-                toString n
+                String.fromInt n
 
-            (-1) ->
-                toString n
+            -- -(1)  ->
+            --      String.fromInt n
 
             x ->
-                "x was caught on n = " ++ toString x
+                "x was caught on n = " ++ String.fromInt x

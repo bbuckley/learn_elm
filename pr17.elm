@@ -1,6 +1,6 @@
-module Main exposing (..)
+module Main exposing (main)
 
-import Html exposing (..)
+import Html exposing (Html, text)
 
 
 split : List a -> Int -> ( List a, List a )
@@ -19,15 +19,11 @@ main =
 
 
 
--- a : List ( ( List b, List b ) Int, ( List b, List b ) )
--- a : List ( ( List Int, List Int ), ( List Int, List Int ) )
-
 
 a : List ( ( List Int, List Int ), ( List Int, List Int ) )
 
 
 
--- a : List ( ( List number, List number ), ( List number, List number ) )
 
 
 a =

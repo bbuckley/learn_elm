@@ -7,11 +7,6 @@ import Html.Events exposing (onClick, onInput)
 import Random
 
 
-
--- Types
---todo use range
-
-
 type alias Model =
     { typedGuess : Maybe Int -- Nothing if invalid Int
     , submittedGuess : Maybe Int
@@ -90,22 +85,16 @@ update msg model =
             )
 
 
-theGuess : Model -> Int
-theGuess model =
-    Maybe.withDefault 0 model.typedGuess
 
-
-tooHigh : Model -> Bool
-tooHigh model =
-    theGuess model > model.answer
-
-
-tooLow : Model -> Bool
-tooLow model =
-    Maybe.withDefault 0 model.typedGuess < model.answer
-
-
-
+-- theGuess : Model -> Int
+-- theGuess model =
+--     Maybe.withDefault 0 model.typedGuess
+-- tooHigh : Model -> Bool
+-- tooHigh model =
+--     theGuess model > model.answer
+-- tooLow : Model -> Bool
+-- tooLow model =
+--     Maybe.withDefault 0 model.typedGuess < model.answer
 -- View
 
 
